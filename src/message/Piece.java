@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 public class Piece {
     public byte[] piece;
     private byte[] messageLength = new byte[4];
-    private byte type = 7;
+    private final static byte type = 7;
     private byte[] pieceIndex = new byte[4];
     private byte[] content;
 

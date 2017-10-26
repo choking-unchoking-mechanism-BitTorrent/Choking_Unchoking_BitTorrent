@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 public class Choke {
     public byte[] choke = new byte[5];
     private byte[] messageLength = new byte[4];
-    private byte type = 0;
+    private final static byte type = 0;
 
     public Choke() {
         messageLength = ByteBuffer.allocate(4).putInt(0).array();
