@@ -28,7 +28,7 @@ public class PeerInfoAnalyzer {
             while (line != null){
                 //Divided by space
                 String[] components = line.split(Constant.DIVIDER);
-                //1.Peer ID 2.Host name 3.Port number 4.Has complete file or not
+                //1.peer ID 2.Host name 3.Port number 4.Has complete file or not
                 if (components.length < 4){
                     throw new FileFormatIncorrectException(
                             Constant.FILE_NAME_PEER_INFO_CFG,

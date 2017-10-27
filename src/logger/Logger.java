@@ -21,8 +21,8 @@ public class Logger {
     private static String INIT_LOGGER_ERROR = " Can not open log file";
     private static String FAIL_IN_WRITING_LOG = " Fail in writing log";
     private static String CLOSE_LOGGER_ERROR =" Can not close log file";
-    private static String TCP_CONNECTING_LOG = " makes a connection to Peer ";
-    private static String TCP_CONNECTED_LOG = " is connected from Peer ";
+    private static String TCP_CONNECTING_LOG = " makes a connection to peer ";
+    private static String TCP_CONNECTED_LOG = " is connected from peer ";
     private static String CHANGE_PREFERED_NEIGHBORS_LOG = " has the prefered neighbors ";
     private static String CHANGE_OPTIMISTICALLY_UNCHOKED_NEIGHBOR_LOG = " has the optimistically unchoked neighbor ";
     private static String UNCHOKING_LOG = " is unchoked by ";
@@ -32,7 +32,7 @@ public class Logger {
     private static String RECEIVE_NOT_INTERESTED_LOG = " received the ‘not interested’ message from ";
     private static String DOWNLOAD_PIECE = " has downloaded the piece ";
     private static String COMPLETE_DOWNLOAD = " has downloaded the complete file";
-    private static String PEER_ID = ": Peer ";
+    private static String PEER_ID = ": peer ";
     private static String FOR_PIECE = " for the piece ";
 
     public static void initLogger(int peerID) throws LoggerIOException {
