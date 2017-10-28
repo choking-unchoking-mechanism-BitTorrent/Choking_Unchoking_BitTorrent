@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 public class NotInterested {
     public byte[] notInterested = new byte[5];
     private byte[] messageLength = new byte[4];
-    private byte type = 3;
+    private final static byte type = 3;
 
     public NotInterested() {
         messageLength = ByteBuffer.allocate(4).putInt(0).array();

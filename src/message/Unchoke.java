@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 public class Unchoke {
     public byte[] unchoke = new byte[5];
     private byte[] messageLength = new byte[4];
-    private byte type = 1;
+    private final static byte type = 1;
 
     public Unchoke() {
         messageLength = ByteBuffer.allocate(4).putInt(0).array();

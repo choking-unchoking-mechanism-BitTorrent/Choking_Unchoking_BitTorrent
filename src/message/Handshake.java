@@ -5,8 +5,8 @@ package message;
  */
 public class Handshake {
     public byte[] handshake = new byte[32];
-    private String header = "P2PFILESHARINGPROJ";
-    private String zeroBits = "0000000000";
+    private final static String header = "P2PFILESHARINGPROJ";
+    private final static String zeroBits = "0000000000";
     private int peerID;
 
     public Handshake(int peerID) {

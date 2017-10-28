@@ -100,7 +100,6 @@ public class CommonAnalyzer {
                             FileFormatIncorrectException.WRONG_FORMAT
                     );
                 }
-
             }
         }
 

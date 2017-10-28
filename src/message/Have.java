@@ -9,7 +9,7 @@ public class Have {
 
     public byte[] have = new byte[9];
     private byte[] messageLength = new byte[4];
-    private byte type = 4;
+    private final static byte type = 4;
     private byte[] payload = new byte[4];
 
     public Have(int index) {

@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 public class Request {
     public byte[] request = new byte[9];
     private byte[] messageLength = new byte[4];
-    private byte type = 6;
+    private final static byte type = 6;
     private byte[] payload = new byte[4];
 
     public Request(int pieceIndex) {
