@@ -1,14 +1,15 @@
 package message;
 
 import java.nio.ByteBuffer;
+import static message.MessageConstant.*;
 
 /**
  * Created by qiaochu on 10/25/17.
  */
 public class Request {
-    public byte[] request = new byte[9];
+    public byte[] request = new byte[REQUEST_LENGTH];
     private byte[] messageLength = new byte[4];
-    private byte type = 6;
+    private byte type = REQUEST_TYPE;
     private byte[] payload = new byte[4];
 
     public Request(int pieceIndex) {

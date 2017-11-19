@@ -1,15 +1,16 @@
 package message;
 
 import java.nio.ByteBuffer;
+import static message.MessageConstant.*;
 
 /**
  * Created by qiaochu on 10/25/17.
  */
 public class Have {
 
-    public byte[] have = new byte[9];
+    public byte[] have = new byte[HAVE_LENGTH];
     private byte[] messageLength = new byte[4];
-    private byte type = 4;
+    private byte type = HAVE_TYPE;
     private byte[] payload = new byte[4];
 
     public Have(int index) {

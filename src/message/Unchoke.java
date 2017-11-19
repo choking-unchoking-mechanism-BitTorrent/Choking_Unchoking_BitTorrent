@@ -1,14 +1,15 @@
 package message;
 
 import java.nio.ByteBuffer;
+import static message.MessageConstant.*;
 
 /**
  * Created by qiaochu on 10/25/17.
  */
 public class Unchoke {
-    public byte[] unchoke = new byte[5];
+    public byte[] unchoke = new byte[UNCHOKE_LENGTH];
     private byte[] messageLength = new byte[4];
-    private byte type = 1;
+    private byte type = UNCHOKE_TYPE;
 
     public Unchoke() {
         messageLength = ByteBuffer.allocate(4).putInt(0).array();
