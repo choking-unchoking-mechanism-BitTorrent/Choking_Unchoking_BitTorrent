@@ -4,8 +4,11 @@ import analyzer.CommonAnalyzer;
 import analyzer.Constant;
 import analyzer.PeerInfo;
 import analyzer.PeerInfoAnalyzer;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import exception.analyzer.AnalyzerException;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.*;
 
 public class PeerProcess {
@@ -18,6 +21,8 @@ public class PeerProcess {
     private int pieceSize;
     private ArrayList<Peer> peers;
     private ArrayList<Peer> preferredNeighbors;
+    private HashMap<Integer, Connection> connectionHashMap;
+    private Timer timer;
 
     public PeerProcess(int peerId) {
         this.peerId = peerId;
@@ -66,29 +71,42 @@ public class PeerProcess {
 
     public void run() {
         init();
+
         //build connections
-        //TO DO...
-
-        new Timer().schedule(new updatePreferredNeighbors(), 0, this.unchokingInterval);
-        new Timer().schedule(new updateOptimisticNeighbor(), 0, this.optimisticUnchokingInterval);
+        this.connectionHashMap = new HashMap<>();
+        for (Peer peer : peers) {
+            if (peer.getPeerId() == this.peerId)
+                break;
+            connect(peer);
+        }
+        TimerTask updatePreferredNeighbors = new UpdatePreferredNeighbors();
+        TimerTask updateOptimisticNeighbor = new UpdateOptimisticNeighbor();
+        timer.schedule(updatePreferredNeighbors, 0, this.unchokingInterval);
+        timer.schedule(updateOptimisticNeighbor, 0, this.optimisticUnchokingInterval);
     }
 
-    public boolean connect(int peerId) {
-
-        return false;
-    }
-
-    private class updatePreferredNeighbors extends TimerTask {
-        @Override
-        public void run() {
-
+    public void connect(Peer peer) {
+        try {
+            Socket socket = new Socket(peer.getHost(), peer.getPort());
+            Connection connection = new Connection(socket, peer, this.peerId);
+            connectionHashMap.put(peer.getPeerId(), connection);
+            connection.start();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private class updateOptimisticNeighbor extends TimerTask {
+    private class UpdatePreferredNeighbors extends TimerTask {
         @Override
         public void run() {
+            //TODO
+        }
+    }
 
+    private class UpdateOptimisticNeighbor extends TimerTask {
+        @Override
+        public void run() {
+            //TODO
         }
     }
 

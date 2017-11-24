@@ -15,7 +15,7 @@ public class Peer {
         this.port = peerInfo.getPort();
         this.peerId = peerInfo.getPeerId();
         if (peerInfo.getHasCompleteFile() == 1)
-            this.bitField.setBitfield(true, piecesNumber);
+            this.bitField.setBitField(true, piecesNumber);
     }
 
     public String getHost() {
@@ -48,5 +48,13 @@ public class Peer {
 
     public void setBitField(BitField bitField) {
         this.bitField = bitField;
+    }
+
+    public Boolean getChocked() {
+        return isChocked;
+    }
+
+    public void setChocked(Boolean chocked) {
+        isChocked = chocked;
     }
 }

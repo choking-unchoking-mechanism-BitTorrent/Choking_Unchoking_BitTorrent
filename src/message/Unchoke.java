@@ -9,11 +9,7 @@ import static message.MessageConstant.*;
 public class Unchoke {
     public byte[] unchoke = new byte[UNCHOKE_LENGTH];
     private byte[] messageLength = new byte[4];
-<<<<<<< HEAD
-    private byte type = UNCHOKE_TYPE;
-=======
     private final static byte type = 1;
->>>>>>> origin/master
 
     public Unchoke() {
         messageLength = ByteBuffer.allocate(4).putInt(0).array();

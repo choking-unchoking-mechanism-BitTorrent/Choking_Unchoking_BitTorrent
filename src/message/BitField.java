@@ -14,7 +14,7 @@ public class BitField {
     private final static byte type = 5;
     public static byte[] bitField;
 
-    public static void setBitField(boolean hasFile, int piecesNum){
+    public synchronized static void setBitField(boolean hasFile, int piecesNum){
         hasCompleteFile = hasFile;
         totalPieces = piecesNum;
         int payloadLength = (int)Math.ceil((double)totalPieces/8);
@@ -45,6 +45,18 @@ public class BitField {
                 bitField[i] = (byte) (bitField[i] | (1 << (7 - j)));
             }
         }
+    }
+
+    public static byte[] getBitFieldByteArray(){
+        byte[] array = new byte[5 + bitField.length];
+        for (int i = 0; i < 4; i++){
+            array[i] = messageLength[i];
+        }
+        array[4] = type;
+        for (int i = 0; i < bitField.length; i++){
+            array[i+5] = bitField[i];
+        }
+        return bitField;
     }
 
     public static void updateBitField(int pieceIndex){
