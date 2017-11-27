@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Connection extends Thread {
     private Socket socket;
@@ -26,6 +27,7 @@ public class Connection extends Thread {
     private PeerProcess process;
     private int downloadBytes;
     private int downloadSpeed;
+    private HashMap<Integer, Boolean> interestedMap;
 
     public Connection(Socket socket, int myPeerID) {
         this.socket = socket;
@@ -34,6 +36,7 @@ public class Connection extends Thread {
         this.opPrefer = false;
         this.interested = false;
         this.broadcastHave = false;
+        this.interestedMap = new HashMap<>();
         try {
             this.outputStream = this.socket.getOutputStream();
             this.inputStream = this.socket.getInputStream();
@@ -53,6 +56,7 @@ public class Connection extends Thread {
         this.broadcastHave = false;
         this.downloadBytes = 0;
         this.downloadSpeed = 0;
+        this.interestedMap = new HashMap<>();
         try {
             this.outputStream = this.socket.getOutputStream();
             this.inputStream = this.socket.getInputStream();
@@ -105,11 +109,20 @@ public class Connection extends Thread {
             BitField field = process.getBitField(this.myPeerID);
             outputStream.write(field.getBitFieldByteArray());
             outputStream.flush();
+            System.out.println("Sent bitfield successfully");
             //wait for bit field
             byte[] reply = new byte[field.getBitFieldByteArray().length];
             BitField bitField = new BitField();
             bitField.setBitField(reply);
             process.addBitField(bitField, peer.getPeerId());
+            System.out.println("Receive bitfield successfully");
+            if(isInterested(peer.getPeerId())) {
+                System.out.println("Interested!");
+                sendInterested();
+            } else {
+                System.out.println("Not Interested!");
+                sendNotInterested();
+            }
         }catch(Exception e){
             e.printStackTrace();
             return false;
@@ -131,11 +144,13 @@ public class Connection extends Thread {
 
     private boolean sendInterested(){
         Message interestedMsg = new Message(MessageConstant.INTERESTED_LENGTH, MessageConstant.INTERESTED_TYPE, null);
+        System.out.println("Sent Interested!");
         return send(interestedMsg);
     }
 
     private boolean sendNotInterested(){
         Message notInterestedMsg = new Message(MessageConstant.NOT_INTERESTED_LENGTH, MessageConstant.NOT_INTERESTED_TYPE, null);
+        System.out.println("Sent Not Interested!");
         return send(notInterestedMsg);
     }
 
@@ -157,6 +172,26 @@ public class Connection extends Thread {
         broadcastHave = true;
         lastReceive = received;
     }
+
+    private boolean isInterested(int peerId) {
+        Boolean isInterested =false;
+        byte[] myBitfieldArray = process.getBitField(myPeerID).getBitFieldByteArray();
+        byte[] neighborBitfieldArray = process.getBitField(peerId).getBitFieldByteArray();
+        for (int i = 0; i < myBitfieldArray.length; i++) {
+            byte myByte = myBitfieldArray[i];
+            byte neighborByte = neighborBitfieldArray[i];
+            for (int j = 7; j > -1; j--) {
+                if ((1 << i & myByte) == 0 && (1 << i & neighborByte) == 1) {
+                    isInterested = true;
+                    this.interestedMap.put(i * 8 + 7 - j, true);
+                } else
+                    this.interestedMap.put(i * 8 + 7 - j, false);
+            }
+        }
+        this.interested = isInterested;
+        return isInterested;
+    }
+
     @Override
     public void run() {
         //Handshake first
@@ -228,10 +263,12 @@ public class Connection extends Thread {
                             process.updateBitField(pieceNum1, peer.getPeerId());
                             break;
                         case MessageConstant.INTERESTED_TYPE:
+                            System.out.println("Receive Interested from peer " + peer.getPeerId());
                             process.updateInterestPeer(peer.getPeerId(), true);
                             break;
                         case MessageConstant.NOT_INTERESTED_TYPE:
-                            process.updateInterestPeer(peer.getPeerId(),false);
+                            System.out.println("Receive Not Interested from peer " + peer.getPeerId());
+                            process.updateInterestPeer(peer.getPeerId(), false);
                             break;
                         case MessageConstant.PIECE_TYPE:
                             //Get piece index

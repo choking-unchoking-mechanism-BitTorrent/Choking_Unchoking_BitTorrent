@@ -93,9 +93,12 @@ public class PeerProcess {
                 }
 
             }
+            BitField bitField = new BitField();
             if (me.getHasCompleteFile() > 0) {
-                BitField bitField = new BitField();
                 bitField.setBitField(true, piecesNumber);
+                this.bitFields.put(this.peerId, bitField);
+            } else {
+                bitField.setBitField(false, piecesNumber);
                 this.bitFields.put(this.peerId, bitField);
             }
             for (Peer p : peers.values()){
