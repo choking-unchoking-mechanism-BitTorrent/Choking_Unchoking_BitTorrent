@@ -25,8 +25,8 @@ public class PeerProcess {
     private byte[] file;
     private int fileSize;
     private int pieceSize;
-    private ArrayList<Peer> peers;
-    private ArrayList<Peer> preferredNeighbors;
+    private HashMap<Integer, Peer> peers;
+    private HashMap<Integer, Peer> preferredNeighbors;
     private HashMap<Integer ,BitField> bitFields;
     private HashMap<Integer, Connection> connectionHashMap;
     private HashMap<Integer, Integer> interestPeer;
@@ -44,7 +44,7 @@ public class PeerProcess {
             String fileName,
             int fileSize,
             int pieceSize,
-            ArrayList<Peer> peers) {
+            HashMap<Integer, Peer> peers) {
         this.peerId = peerId;
         this.numberOfPreferredNeighbors = numberOfPreferredNeighbors;
         this.unchokingInterval = unchokingInterval;
@@ -72,14 +72,23 @@ public class PeerProcess {
             List<PeerInfo> peerInfos = peerInfoAnalyzer.analyze();
             int piecesNumber = (int) Math.ceil((double) this.fileSize / this.pieceSize);
             this.bitFields = new HashMap<>();
-            this.peers = new ArrayList<>();
+            this.peers = new HashMap<>();
             for (PeerInfo peerInfo : peerInfos) {
-                this.peers.add(new Peer(peerInfo, piecesNumber));
+                this.peers.put(peerInfo.getHostID(), new Peer(peerInfo, piecesNumber));
                 //Get me
                 if (peerInfo.getHostID() == peerId){
                     me = peerInfo;
                 }
             }
+
+            //init preferredNeighbors
+            List<Peer> peerList = new ArrayList<>(peers.values());
+            Collections.shuffle(peerList);
+            for (int i = 0; i < numberOfPreferredNeighbors; i++) {
+                Peer peer = peerList.get(i);
+                this.preferredNeighbors.put(peer.getPeerId(), peer);
+            }
+
             //I have complete file.
             if (me.getHasCompleteFile() == 1){
                 setTheFile();
@@ -94,7 +103,7 @@ public class PeerProcess {
 
         //build connections
         this.connectionHashMap = new HashMap<>();
-        for (Peer peer : peers) {
+        for (Peer peer : peers.values()) {
             if (peer.getPeerId() == this.peerId)
                 break;
             connect(peer);
@@ -110,6 +119,8 @@ public class PeerProcess {
             Socket socket = new Socket(peer.getHost(), peer.getPort());
             Connection connection = new Connection(socket, this, peer, this.peerId);
             connectionHashMap.put(peer.getPeerId(), connection);
+            if (preferredNeighbors.containsKey(peer.getPeerId()))
+                connection.setPreferN(true);
             connection.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -167,7 +178,7 @@ public class PeerProcess {
     public void sendHave(int index){
         for (HashMap.Entry e : connectionHashMap.entrySet()){
             Connection c =(Connection)e.getValue();
-            c.brocastHave(index);
+            c.broadcastHave(index);
         }
     }
     public int getPieceSize(){
@@ -177,14 +188,20 @@ public class PeerProcess {
         return me.getHasCompleteFile();
     }
     public synchronized boolean ifAllPeersComplete(){
-        for (int i = 0; i < peers.size(); i++){
-            if (!peers.get(i).getHasCompleteFile()){
+//        for (int i = 0; i < peers.size(); i++){
+//            if (!peers.get(i).getHasCompleteFile()){
+//                return false;
+//            }
+//        }
+        for (Peer peer : peers.values()) {
+            if(peer.getHasCompleteFile())
                 return false;
-            }
         }
         return true;
     }
     public synchronized void updateBitField(int pieceIndex, int peerId){
+        BitField bitField = bitFields.get(peerId);
+        bitField.updateBitField(pieceIndex);
         //TODO update bit field here, then decide if we should send interest
     }
     //Get a random number of piece from peerId have but me don't have

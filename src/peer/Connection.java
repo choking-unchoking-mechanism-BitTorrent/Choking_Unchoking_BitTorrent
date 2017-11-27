@@ -19,11 +19,12 @@ public class Connection extends Thread {
     private boolean preferN;
     private boolean opPrefer;
     private boolean interested;
-    private boolean brocastHave;
+    private boolean broadcastHave;
     private int lastReceive;
     //Access peer process
     private PeerProcess process;
     private int downloadBytes;
+    private int downloadSpeed;
 
     public Connection(Socket socket, PeerProcess process, Peer peer, int myPeerID) {
         this.socket = socket;
@@ -33,8 +34,9 @@ public class Connection extends Thread {
         this.preferN = false;
         this.opPrefer = false;
         this.interested = false;
-        this.brocastHave = false;
+        this.broadcastHave = false;
         downloadBytes = 0;
+        downloadSpeed = 0;
         try {
             this.outputStream = socket.getOutputStream();
             this.inputStream = socket.getInputStream();
@@ -43,7 +45,7 @@ public class Connection extends Thread {
         }
     }
 
-    private void setPreferN(boolean preferN){
+    public void setPreferN(boolean preferN){
         this.preferN = preferN;
     }
 
@@ -128,8 +130,8 @@ public class Connection extends Thread {
                 ByteBuffer.allocate(4).putInt(lastReceive).array());
         return send(sendMsg);
     }
-    public void brocastHave(int received){
-        brocastHave = true;
+    public void broadcastHave(int received){
+        broadcastHave = true;
         lastReceive = received;
     }
     @Override
@@ -153,15 +155,15 @@ public class Connection extends Thread {
             if (process.ifAllPeersComplete())
                 break;
             //Send
-            if (brocastHave){
+            if (broadcastHave){
                 sendHave();
-                brocastHave = false;
+                broadcastHave = false;
             }
-            if (preferN){
+            if (preferN || opPrefer){
+                sendUnchocked();
                 //Send piece
-            }
-            if (opPrefer){
-                //Send piece
+            } else {
+                sendChocked();
             }
             //receive
             //TODO
