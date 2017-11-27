@@ -34,7 +34,10 @@ public class PeerProcess {
     private Timer timer;
 
     public PeerProcess(int peerId) {
+
         this.peerId = peerId;
+        this.preferredNeighbors = new HashMap<>();
+        this.timer = new Timer();
     }
 
     public PeerProcess(
@@ -53,6 +56,7 @@ public class PeerProcess {
         this.fileSize = fileSize;
         this.pieceSize = pieceSize;
         this.peers = peers;
+        this.preferredNeighbors = new HashMap<>();
     }
 
     private void init() {
@@ -80,13 +84,15 @@ public class PeerProcess {
                     me = peerInfo;
                 }
             }
-
+            for (Peer p : peers.values()){
+                System.out.println(p.getPeerId());
+            }
             //init preferredNeighbors
             List<Peer> peerList = new ArrayList<>(peers.values());
             Collections.shuffle(peerList);
             for (int i = 0; i < numberOfPreferredNeighbors; i++) {
                 Peer peer = peerList.get(i);
-                this.preferredNeighbors.put(peer.getPeerId(), peer);
+                preferredNeighbors.put(peer.getPeerId(), peer);
             }
 
             //I have complete file.
@@ -222,7 +228,7 @@ public class PeerProcess {
         }
     }
     public static void main(String[] args) {
-        int peerId = Integer.parseInt(args[1]);
+        int peerId = Integer.parseInt(args[0]);
 
         //analyse config file
         PeerProcess peerProcess = new PeerProcess(peerId);
