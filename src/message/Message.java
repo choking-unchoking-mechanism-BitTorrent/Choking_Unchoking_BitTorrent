@@ -45,15 +45,21 @@ public class Message {
         this.payload = payload;
     }
     public byte[] getMessageByteArray(){
-        byte[] result = new byte[5 + payload.length];
+        byte[] result;
+        if (payload == null)
+            result = new byte[5];
+        else
+            result = new byte[5 + payload.length];
         byte[] lengthArray = ByteBuffer.allocate(4).putInt(length).array();
         //Combine three contents into result
         for (int i = 0; i < 4; i++){
             result[i] = lengthArray[i];
         }
         result[4] = type;
-        for (int i = 0; i < payload.length; i++){
-            result[i+5] = payload[i];
+        if (payload != null) {
+            for (int i = 0; i < payload.length; i++) {
+                result[i + 5] = payload[i];
+            }
         }
         return result;
     }
