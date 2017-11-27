@@ -2,25 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8cd817f5-570c-4217-b68a-5a6b1f3069f6" name="Default" comment="Add implementation of analyzers and exceptions.">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/peer/Connection.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/peer/Peer.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/peer/PeerProcess.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Choking_Unchoking_BitTorrent.iml" afterPath="$PROJECT_DIR$/Choking_Unchoking_BitTorrent.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/analyzer/CommonAnalyzer.java" afterPath="$PROJECT_DIR$/src/analyzer/CommonAnalyzer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/analyzer/Constant.java" afterPath="$PROJECT_DIR$/src/analyzer/Constant.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/analyzer/PeerInfo.java" afterPath="$PROJECT_DIR$/src/analyzer/PeerInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/analyzer/PeerInfoAnalyzer.java" afterPath="$PROJECT_DIR$/src/analyzer/PeerInfoAnalyzer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/logger/Logger.java" afterPath="$PROJECT_DIR$/src/logger/Logger.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/message/BitField.java" afterPath="$PROJECT_DIR$/src/message/BitField.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/message/Choke.java" afterPath="$PROJECT_DIR$/src/message/Choke.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/message/Handshake.java" afterPath="$PROJECT_DIR$/src/message/Handshake.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/message/Have.java" afterPath="$PROJECT_DIR$/src/message/Have.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/message/Interested.java" afterPath="$PROJECT_DIR$/src/message/Interested.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/message/NotInterested.java" afterPath="$PROJECT_DIR$/src/message/NotInterested.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/message/Piece.java" afterPath="$PROJECT_DIR$/src/message/Piece.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/message/Request.java" afterPath="$PROJECT_DIR$/src/message/Request.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/message/Unchoke.java" afterPath="$PROJECT_DIR$/src/message/Unchoke.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/peer/Peer.java" afterPath="$PROJECT_DIR$/src/peer/Peer.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,6 +19,18 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="PeerInfoAnalyzer.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/analyzer/PeerInfoAnalyzer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="333">
+              <caret line="44" column="60" lean-forward="false" selection-start-line="44" selection-start-column="50" selection-end-line="44" selection-end-column="60" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="Choke.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/message/Choke.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -46,56 +41,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Handshake.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Handshake.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/message/Handshake.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ConfigFileNotFoundException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/exception/analyzer/ConfigFileNotFoundException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="11" column="1" lean-forward="false" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CommonAnalyzer.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/analyzer/CommonAnalyzer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1515">
-              <caret line="101" column="17" lean-forward="false" selection-start-line="101" selection-start-column="17" selection-end-line="101" selection-end-column="17" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FileFormatIncorrectException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/exception/analyzer/FileFormatIncorrectException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="660">
-              <caret line="44" column="8" lean-forward="false" selection-start-line="44" selection-start-column="8" selection-end-line="44" selection-end-column="8" />
-              <folding>
-                <element signature="e#1949#1950#0" expanded="true" />
-                <element signature="e#1984#1985#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Constant.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/analyzer/Constant.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="16" column="1" lean-forward="false" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
+            <state relative-caret-position="210">
+              <caret line="14" column="26" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -106,7 +56,47 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
+              <folding>
+                <marker date="1511128450357" expanded="true" signature="239:261" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="56583:56598" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="56633:59106" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="56646:59091" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="56700:56995" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="56719:56980" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="56782:56960" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="56822:56926" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="56843:56904" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57045:57372" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57064:57357" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57159:57337" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57199:57303" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57220:57281" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57423:57688" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57442:57673" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57475:57653" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57515:57619" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57536:57597" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57731:58037" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57750:58022" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57824:58002" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57864:57968" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="57885:57946" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58088:58419" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58107:58404" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58206:58384" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58246:58350" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58267:58328" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58454:58760" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58473:58745" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58547:58725" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58587:58691" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58608:58669" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58812:59077" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58831:59062" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58864:59042" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58904:59008" ph="..." />
+                <marker date="1511128450357" expanded="true" signature="58925:58986" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -114,8 +104,48 @@
       <file leaf-file-name="PeerInfo.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/analyzer/PeerInfo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="1" lean-forward="false" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+            <state relative-caret-position="105">
+              <caret line="7" column="26" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PeerProcess.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/peer/PeerProcess.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="308">
+              <caret line="70" column="0" lean-forward="true" selection-start-line="70" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Have.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/message/Have.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="330">
+              <caret line="23" column="22" lean-forward="false" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Peer.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/peer/Peer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="17" column="37" lean-forward="false" selection-start-line="17" selection-start-column="26" selection-end-line="17" selection-end-column="37" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Connection.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/peer/Connection.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="19" column="59" lean-forward="false" selection-start-line="19" selection-start-column="41" selection-end-line="19" selection-end-column="59" />
               <folding />
             </state>
           </provider>
@@ -124,18 +154,8 @@
       <file leaf-file-name="BitField.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/message/BitField.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
+            <state relative-caret-position="161">
               <caret line="13" column="17" lean-forward="false" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Logger.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/logger/Logger.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="27" column="50" lean-forward="false" selection-start-line="27" selection-start-column="50" selection-end-line="27" selection-end-column="50" />
               <folding />
             </state>
           </provider>
@@ -185,6 +205,7 @@
         <option value="$PROJECT_DIR$/src/message/BitField.java" />
         <option value="$PROJECT_DIR$/src/logger/Logger.java" />
         <option value="$PROJECT_DIR$/src/analyzer/CommonAnalyzer.java" />
+        <option value="$PROJECT_DIR$/src/peer/Peer.java" />
       </list>
     </option>
   </component>
@@ -195,8 +216,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
     <option name="width" value="1280" />
-    <option name="height" value="800" />
+    <option name="height" value="707" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -475,7 +497,7 @@
     <option name="totallyTimeSpent" value="13610000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <frame x="0" y="23" width="1280" height="707" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -764,24 +786,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/message/Have.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="97">
-          <caret line="11" column="24" lean-forward="false" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/analyzer/PeerInfoAnalyzer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="915">
-          <caret line="61" column="1" lean-forward="false" selection-start-line="61" selection-start-column="1" selection-end-line="61" selection-end-column="1" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/exception/analyzer/ConfigFileNotFoundException.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -819,22 +823,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/analyzer/PeerInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="1" lean-forward="false" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/message/BitField.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="17" lean-forward="false" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/logger/Logger.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
@@ -847,7 +835,47 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1511128450357" expanded="true" signature="239:261" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="56583:56598" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="56633:59106" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="56646:59091" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="56700:56995" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="56719:56980" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="56782:56960" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="56822:56926" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="56843:56904" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57045:57372" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57064:57357" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57159:57337" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57199:57303" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57220:57281" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57423:57688" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57442:57673" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57475:57653" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57515:57619" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57536:57597" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57731:58037" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57750:58022" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57824:58002" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57864:57968" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="57885:57946" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58088:58419" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58107:58404" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58206:58384" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58246:58350" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58267:58328" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58454:58760" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58473:58745" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58547:58725" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58587:58691" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58608:58669" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58812:59077" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58831:59062" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58864:59042" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58904:59008" ph="..." />
+            <marker date="1511128450357" expanded="true" signature="58925:58986" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -861,8 +889,66 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/message/Handshake.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+        <state relative-caret-position="210">
+          <caret line="14" column="26" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/message/BitField.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="13" column="17" lean-forward="false" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/peer/Peer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="17" column="37" lean-forward="false" selection-start-line="17" selection-start-column="26" selection-end-line="17" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/peer/Connection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="19" column="59" lean-forward="false" selection-start-line="19" selection-start-column="41" selection-end-line="19" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/analyzer/PeerInfoAnalyzer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="333">
+          <caret line="44" column="60" lean-forward="false" selection-start-line="44" selection-start-column="50" selection-end-line="44" selection-end-column="60" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/analyzer/PeerInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="26" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/peer/PeerProcess.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="70" column="0" lean-forward="true" selection-start-line="70" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/message/Have.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="23" column="22" lean-forward="false" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="22" />
           <folding />
         </state>
       </provider>
