@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.*;
@@ -119,8 +120,24 @@ public class PeerProcess {
         //build connections
         this.connectionHashMap = new HashMap<>();
         for (Peer peer : peers.values()) {
-            if (peer.getPeerId() == this.peerId)
-                break;
+            if (peer.getPeerId() == this.peerId){
+                while (true) {
+                    try {
+                        ServerSocket serverSocket = new ServerSocket(me.getPort());
+                        System.out.println("Waiting connecting");
+                        Socket receivedSocket = serverSocket.accept();
+                        String ip = receivedSocket.getRemoteSocketAddress().toString();
+                        System.out.println(ip);
+                        Connection connection = new Connection(serverSocket.accept(), peerId);
+                        connectionHashMap.put(peer.getPeerId(), connection);
+                        if (preferredNeighbors.containsKey(peer.getPeerId()))
+                            connection.setPreferN(true);
+                        connection.start();
+                    } catch (IOException e) {
+                        //TODO
+                    }
+                }
+            }
             connect(peer);
         }
         TimerTask updatePreferredNeighbors = new UpdatePreferredNeighbors();
@@ -131,10 +148,11 @@ public class PeerProcess {
 
     public void connect(Peer peer) {
         try {
+            System.out.println(peer.getHost());
             Socket socket = new Socket(peer.getHost(), peer.getPort());
             Connection connection = new Connection(socket, this, peer, this.peerId);
             Logger.connectTCP(peer.getPeerId());
-            System.out.println("Connect to " + peer.getPeerId());
+            System.out.println("Connected to " + peer.getPeerId());
             connectionHashMap.put(peer.getPeerId(), connection);
             if (preferredNeighbors.containsKey(peer.getPeerId()))
                 connection.setPreferN(true);

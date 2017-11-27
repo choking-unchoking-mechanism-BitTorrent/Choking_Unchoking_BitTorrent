@@ -27,6 +27,21 @@ public class Connection extends Thread {
     private int downloadBytes;
     private int downloadSpeed;
 
+    public Connection(Socket socket, int myPeerID) {
+        this.socket = socket;
+        this.myPeerID = myPeerID;
+        this.preferN = false;
+        this.opPrefer = false;
+        this.interested = false;
+        this.broadcastHave = false;
+        try {
+            this.outputStream = socket.getOutputStream();
+            this.inputStream = socket.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Connection(Socket socket, PeerProcess process, Peer peer, int myPeerID) {
         this.socket = socket;
         this.peer = peer;
