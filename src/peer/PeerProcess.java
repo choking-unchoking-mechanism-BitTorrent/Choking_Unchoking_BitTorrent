@@ -124,13 +124,18 @@ public class PeerProcess {
                         ServerSocket serverSocket = new ServerSocket(me.getPort());
                         System.out.println("Waiting connecting");
                         Socket receivedSocket = serverSocket.accept();
-                        String ip = receivedSocket.getRemoteSocketAddress().toString();
+                        String ip = receivedSocket.getRemoteSocketAddress().toString().split(":")[0].substring(1);
                         System.out.println(ip);
-                        Connection connection = new Connection(serverSocket.accept(), peerId);
-                        connectionHashMap.put(peer.getPeerId(), connection);
-                        if (preferredNeighbors.containsKey(peer.getPeerId()))
-                            connection.setPreferN(true);
-                        connection.start();
+                        Connection connection;
+                        for (Peer p : peers.values()) {
+                            if (p.getHost().equals(ip)) {
+                                connection = new Connection(receivedSocket, this, p, peerId);
+                                this.connectionHashMap.put(peer.getPeerId(), connection);
+                                if (preferredNeighbors.containsKey(peer.getPeerId()))
+                                    connection.setPreferN(true);
+                                connection.start();
+                            }
+                        }
                     } catch (IOException e) {
                         //TODO
                     }
