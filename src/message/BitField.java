@@ -24,6 +24,7 @@ public class BitField {
         //Ignore content[4] which it type
         //content[4] == (byte)5
         payload = new byte[num];
+        bitField = content;
         for (int i = 0; i < num; i++){
             payload[i] = content[5+i];
         }
@@ -57,14 +58,14 @@ public class BitField {
     }
 
     public byte[] getBitFieldByteArray(){
-        byte[] array = new byte[5 + bitField.length];
-        for (int i = 0; i < 4; i++){
-            array[i] = messageLength[i];
-        }
-        array[4] = type;
-        for (int i = 0; i < bitField.length; i++){
-            array[i+5] = bitField[i];
-        }
+//        byte[] array = new byte[5 + bitField.length];
+//        for (int i = 0; i < 4; i++){
+//            array[i] = messageLength[i];
+//        }
+//        array[4] = type;
+//        for (int i = 0; i < bitField.length; i++){
+//            array[i+5] = bitField[i];
+//        }
         return bitField;
     }
 
