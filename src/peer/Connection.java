@@ -35,8 +35,8 @@ public class Connection extends Thread {
         this.interested = false;
         this.broadcastHave = false;
         try {
-            this.outputStream = socket.getOutputStream();
-            this.inputStream = socket.getInputStream();
+            this.outputStream = this.socket.getOutputStream();
+            this.inputStream = this.socket.getInputStream();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,8 +54,8 @@ public class Connection extends Thread {
         downloadBytes = 0;
         downloadSpeed = 0;
         try {
-            this.outputStream = socket.getOutputStream();
-            this.inputStream = socket.getInputStream();
+            this.outputStream = this.socket.getOutputStream();
+            this.inputStream = this.socket.getInputStream();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -158,17 +158,11 @@ public class Connection extends Thread {
     }
     @Override
     public void run() {
-        try{
-            outputStream = socket.getOutputStream();
-            inputStream = socket.getInputStream();
-        }catch (IOException e){
-            e.printStackTrace();
-            return;
-        }
         //Handshake first
         if (!handshake()){
             return;
         }
+        System.out.println("handshake successfully!");
         //Send Bitfield
         if (!sendBitfield()){
             return;

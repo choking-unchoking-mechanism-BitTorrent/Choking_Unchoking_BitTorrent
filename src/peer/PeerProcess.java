@@ -128,11 +128,17 @@ public class PeerProcess {
                         Socket receivedSocket = serverSocket.accept();
                         String ip = receivedSocket.getRemoteSocketAddress().toString();
                         System.out.println(ip);
-                        Connection connection = new Connection(serverSocket.accept(), peerId);
-                        connectionHashMap.put(peer.getPeerId(), connection);
-                        if (preferredNeighbors.containsKey(peer.getPeerId()))
-                            connection.setPreferN(true);
-                        connection.start();
+                        Connection connection ;
+                        for(Peer p : peers.values()){
+                            if(p.getHost().equals(ip)){
+                                connection = new Connection(receivedSocket, this, p, peerId);
+                                this.connectionHashMap.put(peer.getPeerId(), connection);
+                                if (preferredNeighbors.containsKey(peer.getPeerId()))
+                                    connection.setPreferN(true);
+                                connection.start();
+                            }
+                        }
+
                     } catch (IOException e) {
                         //TODO
                     }
@@ -151,7 +157,7 @@ public class PeerProcess {
             System.out.println(peer.getHost());
             Socket socket = new Socket(peer.getHost(), peer.getPort());
             Connection connection = new Connection(socket, this, peer, this.peerId);
-            Logger.connectTCP(peer.getPeerId());
+//            Logger.connectTCP(peer.getPeerId());
             System.out.println("Connected to " + peer.getPeerId());
             connectionHashMap.put(peer.getPeerId(), connection);
             if (preferredNeighbors.containsKey(peer.getPeerId()))
@@ -159,8 +165,6 @@ public class PeerProcess {
             connection.start();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (LoggerIOException e) {
-            //TODO
         }
     }
 
