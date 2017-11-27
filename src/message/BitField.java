@@ -38,7 +38,7 @@ public class BitField {
         bitField = new byte[payloadLength + 5];
 
         int i = 0;
-        for(; i < messageLength.length; i++) {
+        for(; i < 4; i++) {
             bitField[i] = messageLength[i];
         }
 
@@ -49,15 +49,10 @@ public class BitField {
                 bitField[i] = 0;
             }
         }else {
-            i++;
-            for(int k = 0; k < 8; k++){
-                bitField[i] = (byte) (bitField[i] | 1 << k);
+            for(int k = 0; k < payloadLength; k++){
+                bitField[++i] = (byte) 0xFF;
             }
 
-            i++;
-            for(int j = 0; j< remaining; j++) {
-                bitField[i] = (byte) (bitField[i] | (1 << (7 - j)));
-            }
         }
     }
 

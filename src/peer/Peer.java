@@ -16,8 +16,11 @@ public class Peer {
         this.port = peerInfo.getPort();
         this.peerId = peerInfo.getHostID();
         this.hasCompleteFile = peerInfo.getHasCompleteFile() == 1;
+        this.bitField = new BitField();
         if (peerInfo.getHasCompleteFile() == 1)
             this.bitField.setBitField(true, piecesNumber);
+        else
+            this.bitField.setBitField(false, piecesNumber);
     }
     public boolean getHasCompleteFile(){
         return hasCompleteFile;

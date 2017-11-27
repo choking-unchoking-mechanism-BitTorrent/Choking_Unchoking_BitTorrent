@@ -1,6 +1,7 @@
 package peer;
 
 import exception.message.MessageException;
+import logger.Logger;
 import message.*;
 
 import java.io.IOException;
@@ -66,7 +67,13 @@ public class Connection extends Thread {
             outputStream.flush();
             //Wait for reply
             byte[] reply = new byte[MessageConstant.HANDSHAKE_LENGTH];
-            inputStream.read(reply);
+            int result = inputStream.read(reply);
+            while (result <= 0){
+                Logger.initLogger(myPeerID);
+                Logger.connectTCP(myPeerID);
+                System.out.println("waiting to connect");
+                result = inputStream.read(reply);
+            }
             Handshake handshake = new Handshake(reply);
             if (handshake.getPeerID() != peer.getPeerId()){
                 return false;

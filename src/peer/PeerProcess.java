@@ -6,6 +6,8 @@ import analyzer.PeerInfo;
 import analyzer.PeerInfoAnalyzer;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import exception.analyzer.AnalyzerException;
+import exception.logger.LoggerIOException;
+import logger.Logger;
 import message.BitField;
 
 import java.io.File;
@@ -72,6 +74,11 @@ public class PeerProcess {
             this.pieceSize = (int) configs.get(Constant.STRING_PIECE_SIZE);
             this.file = new byte[this.fileSize];
             this.interestPeer = new HashMap<>();
+            try {
+                Logger.initLogger(peerId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             List<PeerInfo> peerInfos = peerInfoAnalyzer.analyze();
             int piecesNumber = (int) Math.ceil((double) this.fileSize / this.pieceSize);
@@ -124,12 +131,16 @@ public class PeerProcess {
         try {
             Socket socket = new Socket(peer.getHost(), peer.getPort());
             Connection connection = new Connection(socket, this, peer, this.peerId);
+            Logger.connectTCP(peer.getPeerId());
+            System.out.println("Connect to " + peer.getPeerId());
             connectionHashMap.put(peer.getPeerId(), connection);
             if (preferredNeighbors.containsKey(peer.getPeerId()))
                 connection.setPreferN(true);
             connection.start();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (LoggerIOException e) {
+            //TODO
         }
     }
 
