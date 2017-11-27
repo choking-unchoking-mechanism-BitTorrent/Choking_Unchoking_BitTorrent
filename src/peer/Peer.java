@@ -9,15 +9,22 @@ public class Peer {
     private int peerId;
     private BitField bitField;
     private Boolean isChocked;
+    private boolean hasCompleteFile;
 
     public Peer(PeerInfo peerInfo, int piecesNumber) {
         this.host = peerInfo.getHostName();
         this.port = peerInfo.getPort();
-        this.peerId = peerInfo.getPeerId();
+        this.peerId = peerInfo.getHostID();
+        this.hasCompleteFile = peerInfo.getHasCompleteFile() == 1;
         if (peerInfo.getHasCompleteFile() == 1)
             this.bitField.setBitField(true, piecesNumber);
     }
-
+    public boolean getHasCompleteFile(){
+        return hasCompleteFile;
+    }
+    public void setHasCompleteFile(boolean hasCompleteFile){
+        this.hasCompleteFile = hasCompleteFile;
+    }
     public String getHost() {
         return host;
     }
