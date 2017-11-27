@@ -81,7 +81,6 @@ public class Connection extends Thread {
     }
     private boolean handshake(){
         try{
-            System.out.println("I'm in");
             //Send handshake
             this.outputStream.write(new Handshake(myPeerID).getHandshake());
             this.outputStream.flush();
@@ -112,6 +111,7 @@ public class Connection extends Thread {
             System.out.println("Sent bitfield successfully");
             //wait for bit field
             byte[] reply = new byte[field.getBitFieldByteArray().length];
+            inputStream.read(reply);
             BitField bitField = new BitField();
             bitField.setBitField(reply);
             process.addBitField(bitField, peer.getPeerId());
@@ -173,19 +173,26 @@ public class Connection extends Thread {
         lastReceive = received;
     }
 
+    private String bytesToHex(byte[] bytes) {
+        char[] hexArray = "0123456789ABCDEF".toCharArray();
+        char[] hexChars = new char[bytes.length * 2];
+        for ( int j = 0; j < bytes.length; j++ ) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+
     private boolean isInterested(int peerId) {
-        Boolean isInterested =false;
+        Boolean isInterested = false;
         byte[] myBitfieldArray = process.getBitField(myPeerID).getBitFieldByteArray();
         byte[] neighborBitfieldArray = process.getBitField(peerId).getBitFieldByteArray();
-        System.out.println(myBitfieldArray.length);
-        System.out.println(neighborBitfieldArray.length);
-
-        for (int i = 0; i < myBitfieldArray.length; i++) {
+        for (int i = 5; i < myBitfieldArray.length; i++) {
             byte myByte = myBitfieldArray[i];
             byte neighborByte = neighborBitfieldArray[i];
             for (int j = 7; j > -1; j--) {
-                if ((((1 << i) & myByte) == 0) && (((1 << i) & neighborByte) == 1)) {
-                    System.out.println("debug");
+                if (((byte) ((myByte >> j) & 0x1) == (byte) 0 && ((byte) ((neighborByte >> j) & 0x1) == (byte) 1))) {
                     isInterested = true;
                     this.interestedMap.put(i * 8 + 7 - j, true);
                 } else
@@ -193,6 +200,8 @@ public class Connection extends Thread {
             }
         }
         this.interested = isInterested;
+        System.out.println("myByte: " + bytesToHex(myBitfieldArray));
+        System.out.println("neighborByte: " + bytesToHex(neighborBitfieldArray));
         return isInterested;
     }
 
