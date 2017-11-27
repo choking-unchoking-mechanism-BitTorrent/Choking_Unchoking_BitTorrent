@@ -36,7 +36,10 @@ public class PeerProcess {
     private Timer timer;
 
     public PeerProcess(int peerId) {
+
         this.peerId = peerId;
+        this.preferredNeighbors = new HashMap<>();
+        this.timer = new Timer();
     }
 
     public PeerProcess(
@@ -71,6 +74,13 @@ public class PeerProcess {
             this.pieceSize = (int) configs.get(Constant.STRING_PIECE_SIZE);
             this.file = new byte[this.fileSize];
             this.interestPeer = new HashMap<>();
+            try {
+                Logger.initLogger(peerId);
+                Logger.connectTCP(peerId);
+                Logger.closeLogger();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             List<PeerInfo> peerInfos = peerInfoAnalyzer.analyze();
             int piecesNumber = (int) Math.ceil((double) this.fileSize / this.pieceSize);
@@ -83,18 +93,15 @@ public class PeerProcess {
                     me = peerInfo;
                 }
             }
-
+            for (Peer p : peers.values()){
+                System.out.println(p.getPeerId());
+            }
             //init preferredNeighbors
             List<Peer> peerList = new ArrayList<>(peers.values());
             Collections.shuffle(peerList);
             for (int i = 0; i < numberOfPreferredNeighbors; i++) {
                 Peer peer = peerList.get(i);
-                System.out.println("debug");
-                Logger log = new Logger();
-                log.initLogger(1002);
-                log.connectTCP(1002);
-                System.out.println(1);
-                this.preferredNeighbors.put(peer.getPeerId(), peer);
+                preferredNeighbors.put(peer.getPeerId(), peer);
             }
 
             //I have complete file.
@@ -102,8 +109,6 @@ public class PeerProcess {
                 setTheFile();
             }
         } catch (AnalyzerException e) {
-            e.printStackTrace();
-        } catch (LoggerIOException e) {
             e.printStackTrace();
         }
     }
@@ -128,12 +133,16 @@ public class PeerProcess {
         try {
             Socket socket = new Socket(peer.getHost(), peer.getPort());
             Connection connection = new Connection(socket, this, peer, this.peerId);
+            Logger.connectTCP(peer.getPeerId());
+            System.out.println("Connect to " + peer.getPeerId());
             connectionHashMap.put(peer.getPeerId(), connection);
             if (preferredNeighbors.containsKey(peer.getPeerId()))
                 connection.setPreferN(true);
             connection.start();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (LoggerIOException e) {
+            //TODO
         }
     }
 
@@ -141,7 +150,6 @@ public class PeerProcess {
         @Override
         public void run() {
             //TODO
-
         }
     }
 

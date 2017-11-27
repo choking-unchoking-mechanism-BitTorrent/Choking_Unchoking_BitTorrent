@@ -7,6 +7,6 @@ public class ConfigFileNotFoundException extends AnalyzerException{
     }
     @Override
     public String toString(){
-        return "Config file "+ fileName +" not found in executing directory!\n";
+        return "config file "+ fileName +" not found in executing directory!\n";
     }
 }
