@@ -49,14 +49,11 @@ public class BitField {
                 bitField[i] = 0;
             }
         }else {
-            i++;
-            for(int k = 0; k < 8; k++){
-                bitField[i] = (byte) (bitField[i] | 1 << k);
-            }
-
-            i++;
-            for(int j = 0; j< remaining; j++) {
-                bitField[i] = (byte) (bitField[i] | (1 << (7 - j)));
+            for(int t  = 0; t < payloadLength; t++){
+                i++;
+                for(int k = 0; k < 8; k++){
+                    bitField[i] = (byte) (bitField[i] | 1 << k);
+                }
             }
         }
     }

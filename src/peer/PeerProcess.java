@@ -6,6 +6,8 @@ import analyzer.PeerInfo;
 import analyzer.PeerInfoAnalyzer;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import exception.analyzer.AnalyzerException;
+import exception.logger.LoggerIOException;
+import logger.Logger;
 import message.BitField;
 
 import java.io.File;
@@ -53,6 +55,7 @@ public class PeerProcess {
         this.fileSize = fileSize;
         this.pieceSize = pieceSize;
         this.peers = peers;
+        this.preferredNeighbors = new HashMap<>();
     }
 
     private void init() {
@@ -86,6 +89,11 @@ public class PeerProcess {
             Collections.shuffle(peerList);
             for (int i = 0; i < numberOfPreferredNeighbors; i++) {
                 Peer peer = peerList.get(i);
+                System.out.println("debug");
+                Logger log = new Logger();
+                log.initLogger(1002);
+                log.connectTCP(1002);
+                System.out.println(1);
                 this.preferredNeighbors.put(peer.getPeerId(), peer);
             }
 
@@ -94,6 +102,8 @@ public class PeerProcess {
                 setTheFile();
             }
         } catch (AnalyzerException e) {
+            e.printStackTrace();
+        } catch (LoggerIOException e) {
             e.printStackTrace();
         }
     }
@@ -223,7 +233,7 @@ public class PeerProcess {
         }
     }
     public static void main(String[] args) {
-        int peerId = Integer.parseInt(args[1]);
+        int peerId = Integer.parseInt(args[0]);
 
         //analyse config file
         PeerProcess peerProcess = new PeerProcess(peerId);

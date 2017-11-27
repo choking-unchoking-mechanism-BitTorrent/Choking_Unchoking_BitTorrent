@@ -36,6 +36,7 @@ public class Logger {
     private final static String PEER_ID = ": Peer ";
     private final static String FOR_PIECE = " for the piece ";
 
+    public Logger () {}
     public static void initLogger(int peerID) throws LoggerIOException {
         String prefix = "initLogger";
         myPeerID = peerID;

@@ -67,6 +67,7 @@ public class Connection extends Thread {
             //Wait for reply
             byte[] reply = new byte[MessageConstant.HANDSHAKE_LENGTH];
             inputStream.read(reply);
+            inputStream.read(reply);
             Handshake handshake = new Handshake(reply);
             if (handshake.getPeerID() != peer.getPeerId()){
                 return false;
@@ -133,6 +134,12 @@ public class Connection extends Thread {
     public void broadcastHave(int received){
         broadcastHave = true;
         lastReceive = received;
+    }
+    public int getDownloadSpeed(){
+        return this.downloadSpeed;
+    }
+    public void setDownloadSpeed(){
+
     }
     @Override
     public void run() {
