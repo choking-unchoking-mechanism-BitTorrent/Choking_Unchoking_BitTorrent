@@ -51,8 +51,8 @@ public class Connection extends Thread {
         this.opPrefer = false;
         this.interested = false;
         this.broadcastHave = false;
-        downloadBytes = 0;
-        downloadSpeed = 0;
+        this.downloadBytes = 0;
+        this.downloadSpeed = 0;
         try {
             this.outputStream = this.socket.getOutputStream();
             this.inputStream = this.socket.getInputStream();
@@ -67,8 +67,8 @@ public class Connection extends Thread {
 
     private boolean send(Message message) {
         try{
-            outputStream.write(message.getMessageByteArray());
-            outputStream.flush();
+            this.outputStream.write(message.getMessageByteArray());
+            this.outputStream.flush();
         }catch(IOException e){
             //TODO
             return false;
@@ -77,19 +77,20 @@ public class Connection extends Thread {
     }
     private boolean handshake(){
         try{
+            System.out.println("I'm in");
             //Send handshake
-            outputStream.write(new Handshake(myPeerID).getHandshake());
-            outputStream.flush();
+            this.outputStream.write(new Handshake(myPeerID).getHandshake());
+            this.outputStream.flush();
             //Wait for reply
             byte[] reply = new byte[MessageConstant.HANDSHAKE_LENGTH];
             int result = inputStream.read(reply);
+            System.out.println("Result : " + result);
             while (result <= 0){
-                Logger.initLogger(myPeerID);
-                Logger.connectTCP(myPeerID);
-                System.out.println("waiting to connect");
-                result = inputStream.read(reply);
+                System.out.println("waiting to handshake");
+                result = this.inputStream.read(reply);
             }
             Handshake handshake = new Handshake(reply);
+            System.out.println(handshake.getPeerID());
             if (handshake.getPeerID() != peer.getPeerId()){
                 return false;
             }
@@ -160,9 +161,17 @@ public class Connection extends Thread {
     public void run() {
         //Handshake first
         if (!handshake()){
+            System.out.println("Failed");
             return;
         }
-        System.out.println("handshake successfully!");
+        System.out.println("handshake successfully");
+        try{
+            Logger.initLogger(myPeerID);
+            Logger.connectedTCP(myPeerID);
+            Logger.closeLogger();
+        }catch (Exception e){
+
+        }
         //Send Bitfield
         if (!sendBitfield()){
             return;

@@ -77,8 +77,6 @@ public class PeerProcess {
             this.interestPeer = new HashMap<>();
             try {
                 Logger.initLogger(peerId);
-                Logger.connectTCP(peerId);
-                Logger.closeLogger();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -93,6 +91,12 @@ public class PeerProcess {
                 if (peerInfo.getHostID() == peerId){
                     me = peerInfo;
                 }
+
+            }
+            if (me.getHasCompleteFile() > 0) {
+                BitField bitField = new BitField();
+                bitField.setBitField(true, piecesNumber);
+                this.bitFields.put(this.peerId, bitField);
             }
             for (Peer p : peers.values()){
                 System.out.println(p.getPeerId());
@@ -126,11 +130,11 @@ public class PeerProcess {
                         ServerSocket serverSocket = new ServerSocket(me.getPort());
                         System.out.println("Waiting connecting");
                         Socket receivedSocket = serverSocket.accept();
-                        String ip = receivedSocket.getRemoteSocketAddress().toString();
+                        String ip = receivedSocket.getRemoteSocketAddress().toString().split(":")[0].substring(1);
                         System.out.println(ip);
-                        Connection connection ;
-                        for(Peer p : peers.values()){
-                            if(p.getHost().equals(ip)){
+                        Connection connection;
+                        for (Peer p : peers.values()) {
+                            if (p.getHost().equals(ip)) {
                                 connection = new Connection(receivedSocket, this, p, peerId);
                                 this.connectionHashMap.put(peer.getPeerId(), connection);
                                 if (preferredNeighbors.containsKey(peer.getPeerId()))
@@ -138,7 +142,6 @@ public class PeerProcess {
                                 connection.start();
                             }
                         }
-
                     } catch (IOException e) {
                         //TODO
                     }
@@ -157,7 +160,7 @@ public class PeerProcess {
             System.out.println(peer.getHost());
             Socket socket = new Socket(peer.getHost(), peer.getPort());
             Connection connection = new Connection(socket, this, peer, this.peerId);
-//            Logger.connectTCP(peer.getPeerId());
+            Logger.connectTCP(peer.getPeerId());
             System.out.println("Connected to " + peer.getPeerId());
             connectionHashMap.put(peer.getPeerId(), connection);
             if (preferredNeighbors.containsKey(peer.getPeerId()))
@@ -165,6 +168,8 @@ public class PeerProcess {
             connection.start();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (LoggerIOException e) {
+            //TODO
         }
     }
 
