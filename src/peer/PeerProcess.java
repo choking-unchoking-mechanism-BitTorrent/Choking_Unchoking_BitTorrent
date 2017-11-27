@@ -93,9 +93,12 @@ public class PeerProcess {
                 }
 
             }
+            BitField bitField = new BitField();
             if (me.getHasCompleteFile() > 0) {
-                BitField bitField = new BitField();
                 bitField.setBitField(true, piecesNumber);
+                this.bitFields.put(this.peerId, bitField);
+            } else {
+                bitField.setBitField(false, piecesNumber);
                 this.bitFields.put(this.peerId, bitField);
             }
             for (Peer p : peers.values()){
@@ -120,7 +123,6 @@ public class PeerProcess {
 
     public void run() {
         init();
-
         //build connections
         this.connectionHashMap = new HashMap<>();
         for (Peer peer : peers.values()) {
@@ -249,6 +251,7 @@ public class PeerProcess {
         BitField bitField = bitFields.get(peerId);
         bitField.updateBitField(pieceIndex);
         //TODO update bit field here, then decide if we should send interest
+
     }
     //Get a random number of piece from peerId have but me don't have
     public synchronized byte[] getRandomPieceIndex(int peerId){

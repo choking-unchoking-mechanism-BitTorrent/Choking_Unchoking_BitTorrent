@@ -105,11 +105,13 @@ public class Connection extends Thread {
             BitField field = process.getBitField(this.myPeerID);
             outputStream.write(field.getBitFieldByteArray());
             outputStream.flush();
+            System.out.println("BitField sent successfully!");
             //wait for bit field
             byte[] reply = new byte[field.getBitFieldByteArray().length];
             BitField bitField = new BitField();
             bitField.setBitField(reply);
             process.addBitField(bitField, peer.getPeerId());
+            System.out.println("BitField receive successfully!");
         }catch(Exception e){
             e.printStackTrace();
             return false;
