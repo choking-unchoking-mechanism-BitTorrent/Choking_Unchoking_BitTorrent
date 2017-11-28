@@ -33,6 +33,9 @@ public class PeerProcess {
     private HashMap<Integer ,BitField> bitFields;
     private HashMap<Integer, Connection> connectionHashMap;
     private HashMap<Integer, Integer> interestPeer;
+    private ArrayList<Integer> interestedPieces;
+    private ArrayList<Integer> notInterestedPieces;
+    private HashSet<Integer> requestingPeices;
     private PeerInfo me;
     private Timer timer;
 
@@ -41,6 +44,9 @@ public class PeerProcess {
         this.peerId = peerId;
         this.preferredNeighbors = new HashMap<>();
         this.timer = new Timer();
+        this.interestedPieces = new ArrayList<>();
+        this.notInterestedPieces = new ArrayList<>();
+        this.requestingPeices = new HashSet<>();
     }
 
     public PeerProcess(
@@ -60,6 +66,10 @@ public class PeerProcess {
         this.pieceSize = pieceSize;
         this.peers = peers;
         this.preferredNeighbors = new HashMap<>();
+        this.interestedPieces = new ArrayList<>();
+        this.notInterestedPieces = new ArrayList<>();
+        this.requestingPeices = new HashSet<>();
+
     }
 
     private void init() {
@@ -254,12 +264,7 @@ public class PeerProcess {
         //TODO update bit field here, then decide if we should send interest
 
     }
-    //Get a random number of piece from peerId have but me don't have
-    public synchronized byte[] getRandomPieceIndex(int peerId){
-        //TODO
-        Random random = new Random();
-        return ByteBuffer.allocate(4).putInt(random.nextInt()).array();
-    }
+
     public synchronized void updateInterestPeer(int peerId, boolean isInterest){
         if (interestPeer.containsKey(peerId)){
             if (!isInterest){
@@ -281,6 +286,18 @@ public class PeerProcess {
             hexChars[j * 2 + 1] = hexArray[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    public ArrayList<Integer> getInterestedPieces() {
+        return interestedPieces;
+    }
+
+    public ArrayList<Integer> getNotInterestedPieces() {
+        return notInterestedPieces;
+    }
+
+    public HashSet<Integer> getRequestingPeices() {
+        return requestingPeices;
     }
 
     public static void main(String[] args) {
