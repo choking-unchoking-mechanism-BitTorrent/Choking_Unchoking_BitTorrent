@@ -4,9 +4,7 @@ import exception.message.MessageException;
 import logger.Logger;
 import message.*;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.*;
@@ -15,8 +13,8 @@ public class Connection extends Thread {
     private Socket socket;
     private Peer peer;
     private int myPeerID;
-    private OutputStream outputStream;
-    private InputStream inputStream;
+    private BufferedOutputStream outputStream;
+    private BufferedInputStream inputStream;
     private boolean preferN;
     private boolean opPrefer;
     private boolean interested;
@@ -36,8 +34,8 @@ public class Connection extends Thread {
         this.interested = false;
         this.broadcastHave = false;
         try {
-            this.outputStream = this.socket.getOutputStream();
-            this.inputStream = this.socket.getInputStream();
+            this.outputStream = new BufferedOutputStream(this.socket.getOutputStream());
+            this.inputStream = new BufferedInputStream(this.socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,8 +53,8 @@ public class Connection extends Thread {
         this.downloadBytes = 0;
         this.downloadSpeed = 0;
         try {
-            this.outputStream = this.socket.getOutputStream();
-            this.inputStream = this.socket.getInputStream();
+            this.outputStream = new BufferedOutputStream(this.socket.getOutputStream());
+            this.inputStream = new BufferedInputStream(this.socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -207,7 +205,6 @@ public class Connection extends Thread {
 
     //Get a random number of piece from peerId have but me don't have
     private synchronized byte[] getRandomPieceIndex(){
-        //TODO
         HashSet<Integer> set = process.getRequestingPeices();
         int requestedPieceIndex;
         do {
@@ -273,8 +270,9 @@ public class Connection extends Thread {
                     if (result != length){
                         throw new MessageException();
                     }
-                    switch ((int)type[0]){
+                    switch (type[0]){
                         case MessageConstant.UNCHOKE_TYPE:
+                            System.out.println("Received unchocked from " + peer.getPeerId());
                             sendRequest();
                             break;
                         case MessageConstant.CHOKE_TYPE:
@@ -323,7 +321,7 @@ public class Connection extends Thread {
                             } else {
                                 sendNotInterested();
                             }
-                            downloadBytes+=length;
+                            downloadBytes += length;
                             //Send piece to file
                             process.writeIntoFile(Arrays.copyOfRange(reply, 5, reply.length), pieceNum3);
                             break;
