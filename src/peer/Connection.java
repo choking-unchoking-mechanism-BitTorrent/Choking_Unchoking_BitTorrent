@@ -299,7 +299,10 @@ public class Connection extends Thread {
                             //Update here
                             int pieceNum1 = 0;
                             for (int i = 0; i < 4; i++){
-                                pieceNum1 += reply[i] << (3-i);
+                                pieceNum1 += reply[3] & 0xFF |
+                                        (reply[2] & 0xFF) << 8 |
+                                        (reply[1] & 0xFF) << 16 |
+                                        (reply[0] & 0xFF) << 24;
                             }
                             process.updateBitField(pieceNum1, peer.getPeerId());
                             if (isInterested(peer.getPeerId())) {
@@ -312,7 +315,10 @@ public class Connection extends Thread {
                             System.out.println("Receive request from Peer: " + peer.getPeerId());
                             int pieceNum2 = 0;
                             for (int i = 0; i < 4; i++){
-                                pieceNum2 += reply[i] << (3-i);
+                                pieceNum2 += reply[3] & 0xFF |
+                                        (reply[2] & 0xFF) << 8 |
+                                        (reply[1] & 0xFF) << 16 |
+                                        (reply[0] & 0xFF) << 24;
                             }
                             sendPiece(pieceNum2);
                             break;
