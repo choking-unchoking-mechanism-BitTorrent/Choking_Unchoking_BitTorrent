@@ -209,7 +209,7 @@ public class Connection extends Thread {
         int requestedPieceIndex;
         do {
             requestedPieceIndex = this.process.getInterestedPieces().get(new Random().nextInt(this.process.getInterestedPieces().size()));
-        } while (!set.contains(requestedPieceIndex));
+        } while (set.contains(requestedPieceIndex));
         System.out.println("Request peice index " + requestedPieceIndex);
         set.add(requestedPieceIndex);
         return ByteBuffer.allocate(4).putInt(requestedPieceIndex).array();
@@ -254,12 +254,20 @@ public class Connection extends Thread {
             byte[] reply = new byte[4];
             try{
                 int result = inputStream.read(reply);
+//                if (inputStream.available() > 0) result = inputStream.read(reply);
                 //if data arrived
                 while(result == 4){
                     int length = 0;
+//                    for (int i = 0; i < 4; i++){
+//                        length += reply[i] << (3-i);
+//                    }
                     for (int i = 0; i < 4; i++){
-                        length += reply[i] << (3-i);
+                        length = reply[3] & 0xFF |
+                                (reply[2] & 0xFF) << 8 |
+                                (reply[1] & 0xFF) << 16 |
+                                (reply[0] & 0xFF) << 24;
                     }
+                    length--;
                     byte[] type = new byte[1];
                     result = inputStream.read(type);
                     if (result != 1){
