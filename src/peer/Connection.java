@@ -127,14 +127,10 @@ public class Connection extends Thread {
 
     private boolean sendRequest(){
         if(process.getInterestPeer().containsKey(peer.getPeerId())){
-            if(process.getInterestPeer().get(peer.getPeerId()) == 1){
                 Message requestMessage = new Message(MessageConstant.REQUEST_LENGTH, MessageConstant.REQUEST_TYPE,
                         getRandomPieceIndex());
                 System.out.println("send request to Peer: " + peer.getPeerId());
                 return send(requestMessage);
-            } else {
-                return false;
-            }
         } else {
             return false;
         }
@@ -217,13 +213,30 @@ public class Connection extends Thread {
         HashSet<Integer> set = process.getRequestingPeices();
         int requestedPieceIndex;
         do {
-            requestedPieceIndex = this.process.getInterestedPieces().get(new Random().nextInt(this.process.getInterestedPieces().size()));
+            System.out.println(this.process.getInterestedPieces().size());
+            requestedPieceIndex = this.process.getInterestedPieces().get(new Random().
+                    nextInt(this.process.getInterestedPieces().size()));
         } while (set.contains(requestedPieceIndex));
         System.out.println("Request peice index " + requestedPieceIndex);
         set.add(requestedPieceIndex);
         return ByteBuffer.allocate(4).putInt(requestedPieceIndex).array();
     }
 
+    public void doneCalculating(){
+        downloadBytes = 0;
+    }
+    public boolean getPreferN(){
+        return preferN;
+    }
+    public boolean getOpPrefer(){
+        return opPrefer;
+    }
+    public void setOpPrefer(boolean opPrefer){
+        this.opPrefer = opPrefer;
+    }
+    public int getDownloadBytes(){
+        return downloadBytes;
+    }
     @Override
     public void run() {
         //Handshake first

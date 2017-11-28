@@ -10,10 +10,7 @@ import exception.logger.LoggerIOException;
 import logger.Logger;
 import message.BitField;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -32,6 +29,7 @@ public class PeerProcess {
     private HashMap<Integer, Peer> preferredNeighbors;
     private HashMap<Integer ,BitField> bitFields;
     private HashMap<Integer, Connection> connectionHashMap;
+    //Those who are interested on my data.
     private HashMap<Integer, Integer> interestPeer;
     private ArrayList<Integer> interestedPieces;
     private ArrayList<Integer> notInterestedPieces;
@@ -113,7 +111,7 @@ public class PeerProcess {
                 System.out.println(p.getPeerId());
             }
             //init preferredNeighbors
-            List<Peer> peerList = new ArrayList<>(peers.values());
+            /*List<Peer> peerList = new ArrayList<>(peers.values());
             Collections.shuffle(peerList);
             for (int i = 0, j = 0; i < numberOfPreferredNeighbors;) {
                 Peer peer = peerList.get(j++);
@@ -121,7 +119,7 @@ public class PeerProcess {
                     preferredNeighbors.put(peer.getPeerId(), peer);
                     i++;
                 }
-            }
+            }*/
 
             //I have complete file.
             if (me.getHasCompleteFile() == 1){
@@ -192,14 +190,50 @@ public class PeerProcess {
     private class UpdatePreferredNeighbors extends TimerTask {
         @Override
         public void run() {
-            //TODO
+            HashMap<Integer, Double> map = new HashMap<>();
+            for (Map.Entry e : connectionHashMap.entrySet()){
+                Connection c = (Connection) e.getValue();
+                //TODO calculate rate here
+                map.put((Integer)e.getKey(), (double)c.getDownloadBytes() / this.scheduledExecutionTime());
+                c.doneCalculating();
+            }
+            //TODO decide prefer neighbor here
+            preferredNeighbors.clear();
+            for (int i = 0; i < numberOfPreferredNeighbors; i++){
+                double max = -1;
+                int id = -1;
+                for (Map.Entry e : map.entrySet()){
+                    if ((Double)e.getValue() > max && interestPeer.containsKey(e.getKey())){
+                        max = (Double)e.getValue();
+                        id = (Integer)e.getKey();
+                    }
+                }
+                if (max == -1 || id == -1){
+                    return;
+                }
+                preferredNeighbors.put(id, peers.get(id));
+                map.remove(id);
+                connectionHashMap.get(id).setPreferN(true);
+            }
         }
     }
 
     private class UpdateOptimisticNeighbor extends TimerTask {
         @Override
         public void run() {
-            //TODO
+            List<Connection> connections = new ArrayList<>();
+            for (Map.Entry e : interestPeer.entrySet()){
+                if (!connectionHashMap.get((Integer)e.getKey()).getPreferN()){
+                    if (connectionHashMap.get((Integer)e.getKey()).getOpPrefer()){
+                        connectionHashMap.get((Integer)e.getKey()).setOpPrefer(false);
+                    }
+                    connections.add(connectionHashMap.get((Integer)e.getKey()));
+                }
+            }
+            //Get random index.
+            Random rand = new Random();
+            int randIndex = rand.nextInt(connections.size());
+            connections.get(randIndex).setOpPrefer(true);
         }
     }
     //Put bit field.
@@ -232,9 +266,23 @@ public class PeerProcess {
         int start = fileIndex * pieceSize;
         return Arrays.copyOfRange(file, start, start + pieceSize);
     }
-    public synchronized void writeIntoFile(byte[] partOfFile, int index){
+    public synchronized void writeIntoFile(byte[] partOfFile, int index) throws IOException{
+        boolean finish = true;
         for (int i = 0; i < partOfFile.length; i++){
             file[i+index*pieceSize] = partOfFile[i];
+        }
+        BitField bitField = this.getBitField(peerId);
+        byte[] payload = bitField.getPayload();
+        for(int i = 0; i < payload.length; i++){
+            if((payload[i] & 0xFF) != 0xFF){
+                finish = false;
+            }
+        }
+        if(finish){
+            System.out.println("The file complete!");
+            FileOutputStream fileOutputStream = new FileOutputStream("out/" + fileName);
+            fileOutputStream.write(file);
+            fileOutputStream.close();
         }
     }
     public void sendHave(int index){
@@ -307,10 +355,10 @@ public class PeerProcess {
     }
 
     public static void main(String[] args) {
-        int peerId = Integer.parseInt(args[0]);
+        //int peerId = Integer.parseInt(args[0]);
 
         //analyse config file
-        PeerProcess peerProcess = new PeerProcess(peerId);
+        PeerProcess peerProcess = new PeerProcess(1001);
         peerProcess.run();
     }
 
