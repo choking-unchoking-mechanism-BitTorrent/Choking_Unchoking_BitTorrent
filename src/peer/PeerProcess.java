@@ -302,6 +302,10 @@ public class PeerProcess {
         return requestingPeices;
     }
 
+    public HashMap<Integer, Integer> getInterestPeer() {
+        return interestPeer;
+    }
+
     public static void main(String[] args) {
         int peerId = Integer.parseInt(args[0]);
 

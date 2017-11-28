@@ -126,9 +126,17 @@ public class Connection extends Thread {
     }
 
     private boolean sendRequest(){
-        Message requestMessage = new Message(MessageConstant.REQUEST_LENGTH, MessageConstant.REQUEST_TYPE,
-                getRandomPieceIndex());
-        return send(requestMessage);
+        if(process.getInterestPeer().containsKey(peer.getPeerId())){
+            if(process.getInterestPeer().get(peer.getPeerId()) == 1){
+                Message requestMessage = new Message(MessageConstant.REQUEST_LENGTH, MessageConstant.REQUEST_TYPE,
+                        getRandomPieceIndex());
+                return send(requestMessage);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     private boolean sendPiece(int pieceID){
