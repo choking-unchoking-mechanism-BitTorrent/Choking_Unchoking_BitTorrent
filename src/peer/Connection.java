@@ -9,8 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 
 public class Connection extends Thread {
     private Socket socket;
@@ -27,7 +26,7 @@ public class Connection extends Thread {
     private PeerProcess process;
     private int downloadBytes;
     private int downloadSpeed;
-    private HashMap<Integer, Boolean> interestedMap;
+
 
     public Connection(Socket socket, int myPeerID) {
         this.socket = socket;
@@ -36,7 +35,6 @@ public class Connection extends Thread {
         this.opPrefer = false;
         this.interested = false;
         this.broadcastHave = false;
-        this.interestedMap = new HashMap<>();
         try {
             this.outputStream = this.socket.getOutputStream();
             this.inputStream = this.socket.getInputStream();
@@ -56,7 +54,6 @@ public class Connection extends Thread {
         this.broadcastHave = false;
         this.downloadBytes = 0;
         this.downloadSpeed = 0;
-        this.interestedMap = new HashMap<>();
         try {
             this.outputStream = this.socket.getOutputStream();
             this.inputStream = this.socket.getInputStream();
@@ -132,13 +129,14 @@ public class Connection extends Thread {
 
     private boolean sendRequest(){
         Message requestMessage = new Message(MessageConstant.REQUEST_LENGTH, MessageConstant.REQUEST_TYPE,
-                process.getRandomPieceIndex(peer.getPeerId()));
+                getRandomPieceIndex());
         return send(requestMessage);
     }
 
     private boolean sendPiece(int pieceID){
         Message pieceMessage = new Message(process.getPieceSize(), MessageConstant.PIECE_TYPE,
                 process.getFilePart(pieceID));
+        System.out.println("Send piece index: " + pieceID);
         return send(pieceMessage);
     }
 
@@ -161,6 +159,7 @@ public class Connection extends Thread {
 
     private boolean sendUnchocked(){
         Message unchockedMsg = new Message(MessageConstant.UNCHOKE_LENGTH, MessageConstant.UNCHOKE_TYPE, null);
+        System.out.println("Unchocked peer " + peer.getPeerId());
         return send(unchockedMsg);
     }
     private boolean sendHave(){
@@ -173,7 +172,7 @@ public class Connection extends Thread {
         lastReceive = received;
     }
 
-    private boolean isInterested(int peerId) {
+    private synchronized boolean isInterested(int peerId) {
         Boolean isInterested = false;
         byte[] myBitfieldArray = process.getBitField(myPeerID).getBitFieldByteArray();
         byte[] neighborBitfieldArray = process.getBitField(peerId).getBitFieldByteArray();
@@ -183,9 +182,10 @@ public class Connection extends Thread {
             for (int j = 7; j > -1; j--) {
                 if (((1 << j) & myByte) == 0 && ((1 << j) & neighborByte) == 1) {
                     isInterested = true;
-                    this.interestedMap.put(i * 8 + 7 - j, true);
-                } else
-                    this.interestedMap.put(i * 8 + 7 - j, false);
+                    process.getInterestedPieces().add(i * 8 + 7 - j);
+                } else if(process.getNotInterestedPieces().contains(new Integer(i * 8 + 7 - j))) {
+                    process.getNotInterestedPieces().remove(new Integer(i * 8 + 7 - j));
+                }
             }
         }
         this.interested = isInterested;
@@ -203,6 +203,19 @@ public class Connection extends Thread {
             hexChars[j * 2 + 1] = hexArray[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    //Get a random number of piece from peerId have but me don't have
+    private synchronized byte[] getRandomPieceIndex(){
+        //TODO
+        HashSet<Integer> set = process.getRequestingPeices();
+        int requestedPieceIndex;
+        do {
+            requestedPieceIndex = this.process.getInterestedPieces().get(new Random().nextInt(this.process.getInterestedPieces().size()));
+        } while (!set.contains(requestedPieceIndex));
+        System.out.println("Request peice index " + requestedPieceIndex);
+        set.add(requestedPieceIndex);
+        return ByteBuffer.allocate(4).putInt(requestedPieceIndex).array();
     }
 
     @Override
@@ -274,6 +287,18 @@ public class Connection extends Thread {
                                 pieceNum1 += reply[i] << (3-i);
                             }
                             process.updateBitField(pieceNum1, peer.getPeerId());
+                            if (isInterested(peer.getPeerId())) {
+                                sendInterested();
+                            } else {
+                                sendNotInterested();
+                            }
+                            break;
+                        case MessageConstant.REQUEST_TYPE:
+                            int pieceNum2 = 0;
+                            for (int i = 0; i < 4; i++){
+                                pieceNum2 += reply[i] << (3-i);
+                            }
+                            sendPiece(pieceNum2);
                             break;
                         case MessageConstant.INTERESTED_TYPE:
                             System.out.println("Receive Interested from peer " + peer.getPeerId());
@@ -285,15 +310,22 @@ public class Connection extends Thread {
                             break;
                         case MessageConstant.PIECE_TYPE:
                             //Get piece index
-                            int pieceNum2 = 0;
+                            int pieceNum3 = 0;
                             for (int i = 0; i < 4; i++){
-                                pieceNum2 += reply[i] << (3-i);
+                                pieceNum3 += reply[i] << (3-i);
                             }
+                            System.out.print("Receive piece index: " + pieceNum3);
                             //Update my bit field
-                            process.updateBitField(pieceNum2, peer.getPeerId());
+                            process.updateBitField(pieceNum3, peer.getPeerId());
+                            if (isInterested(peer.getPeerId())) {
+                                //after receive a piece, continue to send request
+                                sendRequest();
+                            } else {
+                                sendNotInterested();
+                            }
                             downloadBytes+=length;
                             //Send piece to file
-                            process.writeIntoFile(Arrays.copyOfRange(reply, 5, reply.length), pieceNum2);
+                            process.writeIntoFile(Arrays.copyOfRange(reply, 5, reply.length), pieceNum3);
                             break;
                     }
                     result = inputStream.read(reply);
