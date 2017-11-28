@@ -4,6 +4,7 @@ import peer.Connection;
 import peer.PeerProcess;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
  * Created by qiaochu on 10/25/17.
@@ -33,8 +34,11 @@ public class BitField {
             messageLength[i] = content[i];
             num += (int)content[i] << (3-i);
         }
+        //num = java.nio.ByteBuffer.wrap(Arrays.copyOfRange(content, 0, 5)).getInt();
+        System.out.println(num);
         //Ignore content[4] which it type
         //content[4] == (byte)5
+        //System.out.println(num);
         bitField = new byte[num + 5];
         bitField = content;
         payload = new byte[num];
@@ -61,7 +65,7 @@ public class BitField {
 
         bitField[i] = type;
         if(!hasCompleteFile) {
-            for(int j = 0; j < payload.length; j++) {
+            for(int j = 0; j < payload.length - 1; j++) {
                 i++;
                 bitField[i] = 0;
             }

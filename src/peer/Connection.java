@@ -24,7 +24,7 @@ public class Connection extends Thread {
     private PeerProcess process;
     private int downloadBytes;
     private int downloadSpeed;
-
+    private boolean unchoke;
 
     public Connection(Socket socket, int myPeerID) {
         this.socket = socket;
@@ -33,6 +33,7 @@ public class Connection extends Thread {
         this.opPrefer = false;
         this.interested = false;
         this.broadcastHave = false;
+        unchoke = false;
         try {
             this.outputStream = new BufferedOutputStream(this.socket.getOutputStream());
             this.inputStream = new BufferedInputStream(this.socket.getInputStream());
@@ -52,6 +53,7 @@ public class Connection extends Thread {
         this.broadcastHave = false;
         this.downloadBytes = 0;
         this.downloadSpeed = 0;
+        unchoke = false;
         try {
             this.outputStream = new BufferedOutputStream(this.socket.getOutputStream());
             this.inputStream = new BufferedInputStream(this.socket.getInputStream());
@@ -60,7 +62,7 @@ public class Connection extends Thread {
         }
     }
 
-    public void setPreferN(boolean preferN){
+    public synchronized void setPreferN(boolean preferN){
         this.preferN = preferN;
     }
 
@@ -88,7 +90,7 @@ public class Connection extends Thread {
                 result = this.inputStream.read(reply);
             }
             Handshake handshake = new Handshake(reply);
-            System.out.println(handshake.getPeerID());
+            System.out.println(peer.getPeerId());
             if (handshake.getPeerID() != peer.getPeerId()){
                 return false;
             }
@@ -126,14 +128,14 @@ public class Connection extends Thread {
     }
 
     private boolean sendRequest(){
-        if(process.getInterestPeer().containsKey(peer.getPeerId())){
-                Message requestMessage = new Message(MessageConstant.REQUEST_LENGTH, MessageConstant.REQUEST_TYPE,
-                        getRandomPieceIndex());
-                System.out.println("send request to Peer: " + peer.getPeerId());
-                return send(requestMessage);
-        } else {
-            return false;
-        }
+        //if(process.getInterestPeer().containsKey(peer.getPeerId())){
+        Message requestMessage = new Message(MessageConstant.REQUEST_LENGTH, MessageConstant.REQUEST_TYPE,
+                getRandomPieceIndex());
+        System.out.println("send request to Peer: " + peer.getPeerId());
+        return send(requestMessage);
+        //} else {
+        //    return false;
+        //}
     }
 
     private boolean sendPiece(int pieceID){
@@ -182,18 +184,24 @@ public class Connection extends Thread {
         for (int i = 5; i < myBitfieldArray.length; i++) {
             byte myByte = myBitfieldArray[i];
             byte neighborByte = neighborBitfieldArray[i];
+            //TODO
+            //Problem here : if complete, all bit field will be set to 1 include unused bit field.
+            //if not complete, all bit filed set to 0 include unused bit field.
+            //Ex. 4 pieces here but we get 8 interested because 1002 has 8 bits 0 and 1001 has 8 bits 1.
+            //In fact, 1002's bit field should be 00001111.
             for (int j = 7; j > -1; j--) {
-                if (((1 << j) & myByte) == 0 && ((1 << j) & neighborByte) == 1) {
+                if ((((1 << j) & myByte) == 0) && (((1 << j) & neighborByte) == 1)) {
                     isInterested = true;
-                    process.getInterestedPieces().add(i * 8 + 7 - j);
-                } else if(process.getNotInterestedPieces().contains(new Integer(i * 8 + 7 - j))) {
-                    process.getNotInterestedPieces().remove(new Integer(i * 8 + 7 - j));
+                    process.getInterestedPieces().add((i-5) * 8 + 7 - j);
+                } else if(process.getNotInterestedPieces().contains(new Integer((i-5) * 8 + 7 - j))) {
+                    process.getNotInterestedPieces().remove(new Integer((i-5) * 8 + 7 - j));
                 }
             }
         }
         this.interested = isInterested;
         System.out.println("myByte: " + bytesToHex(myBitfieldArray));
         System.out.println("neighborByte: " + bytesToHex(neighborBitfieldArray));
+        System.out.println("Interested pieces : " + process.getInterestedPieces().size());
         return isInterested;
     }
 
@@ -222,26 +230,29 @@ public class Connection extends Thread {
         return ByteBuffer.allocate(4).putInt(requestedPieceIndex).array();
     }
 
-    public void doneCalculating(){
+    public synchronized void doneCalculating(){
         downloadBytes = 0;
     }
-    public boolean getPreferN(){
+    public synchronized boolean getPreferN(){
         return preferN;
     }
-    public boolean getOpPrefer(){
+    public synchronized boolean getOpPrefer(){
         return opPrefer;
     }
-    public void setOpPrefer(boolean opPrefer){
+    public synchronized void setOpPrefer(boolean opPrefer){
         this.opPrefer = opPrefer;
     }
-    public int getDownloadBytes(){
+    public synchronized int getDownloadBytes(){
         return downloadBytes;
+    }
+    public synchronized void setUnchoke(boolean b){
+        unchoke = b;
     }
     @Override
     public void run() {
         //Handshake first
         if (!handshake()){
-            System.out.println("Failed");
+            System.out.println("Handshake failed");
             return;
         }
         System.out.println("handshake successfully");
@@ -256,26 +267,35 @@ public class Connection extends Thread {
         if (!sendBitfield()){
             return;
         }
+        sendChocked();
         while (true){
-            if (process.ifAllPeersComplete())
-                break;
             //Send
             if (broadcastHave){
                 sendHave();
                 broadcastHave = false;
             }
             if (preferN || opPrefer){
-                sendUnchocked();
+                //sendPiece();
                 //Send piece
-            } else {
-                sendChocked();
+            }
+            if (unchoke){
+                sendUnchocked();
+                preferN = true;
+                unchoke = false;
+            }
+            if (process.ifAllPeersComplete()){
+                System.out.println("All peers finish!");
+                break;
             }
             //receive
-            //TODO
             //read length first.
             byte[] reply = new byte[4];
             try{
-                int result = inputStream.read(reply);
+                int result = 0;
+                if (inputStream.available() > 0)
+                    result = inputStream.read(reply);
+                else
+                    continue;
 //                if (inputStream.available() > 0) result = inputStream.read(reply);
                 //if data arrived
                 while(result == 4){
@@ -288,30 +308,41 @@ public class Connection extends Thread {
                                 (reply[2] & 0xFF) << 8 |
                                 (reply[1] & 0xFF) << 16 |
                                 (reply[0] & 0xFF) << 24;
-                    }
+                        }
                     length--;
                     byte[] type = new byte[1];
                     result = inputStream.read(type);
                     if (result != 1){
                         throw new MessageException();
                     }
-                    byte[] payload = new byte[length];
-                    result = inputStream.read(payload);
-                    if (result != length){
-                        throw new MessageException();
+                    byte[] payload = null;
+                    if (length > 0){
+                        payload = new byte[length];
+                        result = inputStream.read(payload);
+                        if (result != length){
+                            System.out.println("Wrong result");
+                            throw new MessageException();
+                        }
                     }
-                    switch (type[0]){
+                    /*byte[] payload = new byte[length];
+                    result = inputStream.read(payload);
+                    length = 5 + result;
+                    if (result != length){
+                        System.out.println("Wrong result");
+                        throw new MessageException();
+                    }*/
+                    switch (type[0]) {
                         case MessageConstant.UNCHOKE_TYPE:
                             System.out.println("Received unchocked from " + peer.getPeerId());
                             sendRequest();
                             break;
                         case MessageConstant.CHOKE_TYPE:
-                            //Do nothing
+                            System.out.println("Received chocked from " + peer.getPeerId());
                             break;
                         case MessageConstant.HAVE_TYPE:
                             //Update here
                             int pieceNum1 = 0;
-                            for (int i = 0; i < 4; i++){
+                            for (int i = 0; i < 4; i++) {
                                 pieceNum1 += reply[3] & 0xFF |
                                         (reply[2] & 0xFF) << 8 |
                                         (reply[1] & 0xFF) << 16 |
@@ -327,12 +358,13 @@ public class Connection extends Thread {
                         case MessageConstant.REQUEST_TYPE:
                             System.out.println("Receive request from Peer: " + peer.getPeerId());
                             int pieceNum2 = 0;
-                            for (int i = 0; i < 4; i++){
-                                pieceNum2 += reply[3] & 0xFF |
-                                        (reply[2] & 0xFF) << 8 |
-                                        (reply[1] & 0xFF) << 16 |
-                                        (reply[0] & 0xFF) << 24;
-                            }
+                           // for (int i = 0; i < payload.length; i++) {
+                                pieceNum2 += payload[3] & 0xFF |
+                                        (payload[2] & 0xFF) << 8 |
+                                        (payload[1] & 0xFF) << 16 |
+                                        (payload[0] & 0xFF) << 24;
+                            //}
+                            System.out.println("Receive request for piece: " + pieceNum2);
                             sendPiece(pieceNum2);
                             break;
                         case MessageConstant.INTERESTED_TYPE:
@@ -346,12 +378,13 @@ public class Connection extends Thread {
                         case MessageConstant.PIECE_TYPE:
                             //Get piece index
                             int pieceNum3 = 0;
-                            for (int i = 0; i < 4; i++){
-                                pieceNum3 += reply[i] << (3-i);
+                            for (int i = 0; i < 4; i++) {
+                                pieceNum3 += reply[i] << (3 - i);
                             }
                             System.out.print("Receive piece index: " + pieceNum3);
                             //Update my bit field
                             process.updateBitField(pieceNum3, peer.getPeerId());
+                            process.writeIntoFile(payload, pieceNum3);
                             if (isInterested(peer.getPeerId())) {
                                 //after receive a piece, continue to send request
                                 sendRequest();
@@ -362,8 +395,12 @@ public class Connection extends Thread {
                             //Send piece to file
                             process.writeIntoFile(Arrays.copyOfRange(reply, 5, reply.length), pieceNum3);
                             break;
+                        default:
+                            System.out.println("Unexpected message");
+                            break;
                     }
-                    result = inputStream.read(reply);
+                    if (inputStream.available() > 0)
+                        result = inputStream.read(reply);
                 }
             }catch(IOException e){
                 e.printStackTrace();
