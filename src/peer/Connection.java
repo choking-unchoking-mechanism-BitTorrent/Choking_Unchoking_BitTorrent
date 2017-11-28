@@ -173,17 +173,6 @@ public class Connection extends Thread {
         lastReceive = received;
     }
 
-    private String bytesToHex(byte[] bytes) {
-        char[] hexArray = "0123456789ABCDEF".toCharArray();
-        char[] hexChars = new char[bytes.length * 2];
-        for ( int j = 0; j < bytes.length; j++ ) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
-
     private boolean isInterested(int peerId) {
         Boolean isInterested = false;
         byte[] myBitfieldArray = process.getBitField(myPeerID).getBitFieldByteArray();
@@ -192,7 +181,7 @@ public class Connection extends Thread {
             byte myByte = myBitfieldArray[i];
             byte neighborByte = neighborBitfieldArray[i];
             for (int j = 7; j > -1; j--) {
-                if (((byte) ((myByte >> j) & 0x1) == (byte) 0 && ((byte) ((neighborByte >> j) & 0x1) == (byte) 1))) {
+                if (((1 << j) & myByte) == 0 && ((1 << j) & neighborByte) == 1) {
                     isInterested = true;
                     this.interestedMap.put(i * 8 + 7 - j, true);
                 } else
@@ -203,6 +192,17 @@ public class Connection extends Thread {
         System.out.println("myByte: " + bytesToHex(myBitfieldArray));
         System.out.println("neighborByte: " + bytesToHex(neighborBitfieldArray));
         return isInterested;
+    }
+
+    public String bytesToHex(byte[] bytes) {
+        char[] hexArray = "0123456789ABCDEF".toCharArray();
+        char[] hexChars = new char[bytes.length * 2];
+        for ( int j = 0; j < bytes.length; j++ ) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
     }
 
     @Override
@@ -225,6 +225,7 @@ public class Connection extends Thread {
             return;
         }
         while (true){
+
             if (process.ifAllPeersComplete())
                 break;
             //Send

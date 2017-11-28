@@ -2,12 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8cd817f5-570c-4217-b68a-5a6b1f3069f6" name="Default" comment="Add implementation of analyzers and exceptions.">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/message/BitField.class" afterPath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/message/BitField.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/Connection.class" afterPath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/Connection.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/PeerProcess$UpdateOptimisticNeighbor.class" afterPath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/PeerProcess$UpdateOptimisticNeighbor.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/PeerProcess$UpdatePreferredNeighbors.class" afterPath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/PeerProcess$UpdatePreferredNeighbors.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/PeerProcess.class" afterPath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/PeerProcess.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/log_peer_1002.log" afterPath="$PROJECT_DIR$/log_peer_1002.log" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/message/BitField.java" afterPath="$PROJECT_DIR$/src/message/BitField.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/peer/Connection.java" afterPath="$PROJECT_DIR$/src/peer/Connection.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/peer/PeerProcess.java" afterPath="$PROJECT_DIR$/src/peer/PeerProcess.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -58,14 +60,14 @@
       <file leaf-file-name="PeerProcess.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/peer/PeerProcess.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="126" column="10" lean-forward="false" selection-start-line="126" selection-start-column="9" selection-end-line="126" selection-end-column="10" />
+            <state relative-caret-position="225">
+              <caret line="250" column="43" lean-forward="false" selection-start-line="250" selection-start-column="29" selection-end-line="250" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#8712#8713#0" expanded="true" />
-                <element signature="e#8744#8745#0" expanded="true" />
-                <element signature="e#8794#8795#0" expanded="true" />
-                <element signature="e#8840#8841#0" expanded="true" />
+                <element signature="e#8795#8796#0" expanded="true" />
+                <element signature="e#8827#8828#0" expanded="true" />
+                <element signature="e#8877#8878#0" expanded="true" />
+                <element signature="e#8923#8924#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -93,11 +95,21 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="Have.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/message/Have.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="10" column="45" lean-forward="true" selection-start-line="10" selection-start-column="45" selection-end-line="10" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="Connection.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/peer/Connection.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="301" column="36" lean-forward="true" selection-start-line="301" selection-start-column="36" selection-end-line="301" selection-end-column="36" />
+            <state relative-caret-position="240">
+              <caret line="146" column="47" lean-forward="true" selection-start-line="146" selection-start-column="0" selection-end-line="147" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2038#2039#0" expanded="true" />
@@ -129,18 +141,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CommonAnalyzer.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/analyzer/CommonAnalyzer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="31" column="42" lean-forward="false" selection-start-line="31" selection-start-column="35" selection-end-line="31" selection-end-column="42" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -165,6 +165,7 @@
       <find>sendInterested</find>
       <find>bitFields</find>
       <find>bitfield</find>
+      <find>sendp</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -931,14 +932,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/message/Have.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="23" column="22" lean-forward="false" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/analyzer/PeerInfo.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -1119,20 +1112,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/peer/PeerProcess.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="126" column="10" lean-forward="false" selection-start-line="126" selection-start-column="9" selection-end-line="126" selection-end-column="10" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#8712#8713#0" expanded="true" />
-            <element signature="e#8744#8745#0" expanded="true" />
-            <element signature="e#8794#8795#0" expanded="true" />
-            <element signature="e#8840#8841#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/message/BitField.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="132">
@@ -1141,10 +1120,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/message/Have.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="10" column="45" lean-forward="true" selection-start-line="10" selection-start-column="45" selection-end-line="10" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/peer/PeerProcess.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="250" column="43" lean-forward="false" selection-start-line="250" selection-start-column="29" selection-end-line="250" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#8795#8796#0" expanded="true" />
+            <element signature="e#8827#8828#0" expanded="true" />
+            <element signature="e#8877#8878#0" expanded="true" />
+            <element signature="e#8923#8924#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/peer/Connection.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="301" column="36" lean-forward="true" selection-start-line="301" selection-start-column="36" selection-end-line="301" selection-end-column="36" />
+        <state relative-caret-position="240">
+          <caret line="146" column="47" lean-forward="true" selection-start-line="146" selection-start-column="0" selection-end-line="147" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2038#2039#0" expanded="true" />
