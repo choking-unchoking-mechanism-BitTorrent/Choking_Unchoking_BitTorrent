@@ -126,10 +126,8 @@ public class Connection extends Thread {
     }
 
     private boolean sendRequest(){
-        System.out.println("send request");
         Message requestMessage = new Message(MessageConstant.REQUEST_LENGTH, MessageConstant.REQUEST_TYPE,
                 getRandomPieceIndex());
-        System.out.println("generate message");
         return send(requestMessage);
     }
 
@@ -207,13 +205,10 @@ public class Connection extends Thread {
 
     //Get a random number of piece from peerId have but me don't have
     private synchronized byte[] getRandomPieceIndex(){
-        System.out.println("enter get random");
         HashSet<Integer> set = process.getRequestingPeices();
-        System.out.println(set.size());
         int requestedPieceIndex;
         do {
             requestedPieceIndex = this.process.getInterestedPieces().get(new Random().nextInt(this.process.getInterestedPieces().size()));
-
         } while (set.contains(requestedPieceIndex));
         System.out.println("Request peice index " + requestedPieceIndex);
         set.add(requestedPieceIndex);
@@ -240,7 +235,6 @@ public class Connection extends Thread {
             return;
         }
         while (true){
-            System.out.println("Enter while true");
             if (process.ifAllPeersComplete())
                 break;
             //Send
@@ -260,11 +254,13 @@ public class Connection extends Thread {
             byte[] reply = new byte[4];
             try{
                 int result = inputStream.read(reply);
+//                if (inputStream.available() > 0) result = inputStream.read(reply);
                 //if data arrived
                 while(result == 4){
-                    System.out.println("result: " + result);
-                    System.out.println("length: " + bytesToHex(reply));
                     int length = 0;
+//                    for (int i = 0; i < 4; i++){
+//                        length += reply[i] << (3-i);
+//                    }
                     for (int i = 0; i < 4; i++){
                         length = reply[3] & 0xFF |
                                 (reply[2] & 0xFF) << 8 |
@@ -272,21 +268,16 @@ public class Connection extends Thread {
                                 (reply[0] & 0xFF) << 24;
                     }
                     length--;
-                    System.out.println(length);
                     byte[] type = new byte[1];
                     result = inputStream.read(type);
-                    System.out.println("&&&&");
                     if (result != 1){
                         throw new MessageException();
                     }
                     byte[] payload = new byte[length];
                     result = inputStream.read(payload);
-                    System.out.println("$$$$");
-
                     if (result != length){
                         throw new MessageException();
                     }
-                    System.out.println("type: " + type[0]);
                     switch (type[0]){
                         case MessageConstant.UNCHOKE_TYPE:
                             System.out.println("Received unchocked from " + peer.getPeerId());
@@ -343,9 +334,7 @@ public class Connection extends Thread {
                             process.writeIntoFile(Arrays.copyOfRange(reply, 5, reply.length), pieceNum3);
                             break;
                     }
-                    System.out.println("@@@");
                     result = inputStream.read(reply);
-                    System.out.println("****");
                 }
             }catch(IOException e){
                 e.printStackTrace();

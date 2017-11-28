@@ -1,5 +1,8 @@
 package message;
 
+import peer.Connection;
+import peer.PeerProcess;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -32,6 +35,8 @@ public class BitField {
         }
         //Ignore content[4] which it type
         //content[4] == (byte)5
+        bitField = new byte[num + 5];
+        bitField = content;
         payload = new byte[num];
         bitField = content;
         System.out.println("debug: " + bytesToHex(bitField));
@@ -64,8 +69,18 @@ public class BitField {
             for(int k = 0; k < payloadLength; k++){
                 bitField[++i] = (byte) 0xFF;
             }
-
         }
+    }
+
+    public String bytesToHex(byte[] bytes) {
+        char[] hexArray = "0123456789ABCDEF".toCharArray();
+        char[] hexChars = new char[bytes.length * 2];
+        for ( int j = 0; j < bytes.length; j++ ) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
     }
 
     public byte[] getBitFieldByteArray(){
