@@ -238,7 +238,7 @@ public class Connection extends Thread {
             return;
         }
         while (true){
-
+            System.out.println("Enter while true");
             if (process.ifAllPeersComplete())
                 break;
             //Send
@@ -274,8 +274,10 @@ public class Connection extends Thread {
                     if (result != length){
                         throw new MessageException();
                     }
-                    switch ((int)type[0]){
+
+                    switch (type[0]){
                         case MessageConstant.UNCHOKE_TYPE:
+                            System.out.println("receive unchoked from : " + peer.getPeerId());
                             sendRequest();
                             break;
                         case MessageConstant.CHOKE_TYPE:
@@ -329,7 +331,11 @@ public class Connection extends Thread {
                             process.writeIntoFile(Arrays.copyOfRange(reply, 5, reply.length), pieceNum3);
                             break;
                     }
+                    System.out.println("@");
+                    int count = inputStream.available();
+                    System.out.println("###" + count);
                     result = inputStream.read(reply);
+                    System.out.println(result);
                 }
             }catch(IOException e){
                 e.printStackTrace();

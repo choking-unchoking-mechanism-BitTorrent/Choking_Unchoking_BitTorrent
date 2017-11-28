@@ -101,7 +101,6 @@ public class PeerProcess {
                 if (peerInfo.getHostID() == peerId){
                     me = peerInfo;
                 }
-
             }
             BitField bitField = new BitField();
             if (me.getHasCompleteFile() > 0) {
@@ -118,9 +117,12 @@ public class PeerProcess {
             //init preferredNeighbors
             List<Peer> peerList = new ArrayList<>(peers.values());
             Collections.shuffle(peerList);
-            for (int i = 0; i < numberOfPreferredNeighbors; i++) {
-                Peer peer = peerList.get(i);
-                preferredNeighbors.put(peer.getPeerId(), peer);
+            for (int i = 0, j = 0; i < numberOfPreferredNeighbors;) {
+                Peer peer = peerList.get(j++);
+                if(peer.getPeerId() != peerId) {
+                    preferredNeighbors.put(peer.getPeerId(), peer);
+                    i++;
+                }
             }
 
             //I have complete file.
@@ -149,8 +151,8 @@ public class PeerProcess {
                         for (Peer p : peers.values()) {
                             if (p.getHost().equals(ip)) {
                                 connection = new Connection(receivedSocket, this, p, peerId);
-                                this.connectionHashMap.put(peer.getPeerId(), connection);
-                                if (preferredNeighbors.containsKey(peer.getPeerId()))
+                                this.connectionHashMap.put(p.getPeerId(), connection);
+                                if (preferredNeighbors.containsKey(p.getPeerId()))
                                     connection.setPreferN(true);
                                 connection.start();
                             }
@@ -176,6 +178,8 @@ public class PeerProcess {
             Logger.connectTCP(peer.getPeerId());
             System.out.println("Connected to " + peer.getPeerId());
             connectionHashMap.put(peer.getPeerId(), connection);
+            System.out.println("debug:::::::" + preferredNeighbors.keySet().toString());
+
             if (preferredNeighbors.containsKey(peer.getPeerId()))
                 connection.setPreferN(true);
             connection.start();
