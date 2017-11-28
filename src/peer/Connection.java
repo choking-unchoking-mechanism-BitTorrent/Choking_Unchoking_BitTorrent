@@ -126,18 +126,15 @@ public class Connection extends Thread {
     }
 
     private boolean sendRequest(){
-        if(process.getInterestPeer().containsKey(peer.getPeerId())){
-            if(process.getInterestPeer().get(peer.getPeerId()) == 1){
-                Message requestMessage = new Message(MessageConstant.REQUEST_LENGTH, MessageConstant.REQUEST_TYPE,
-                        getRandomPieceIndex());
-                System.out.println("send request to Peer: " + peer.getPeerId());
-                return send(requestMessage);
-            } else {
-                return false;
-            }
+        if(process.getInterestPeer().containsKey(peer.getPeerId())) {
+            Message requestMessage = new Message(MessageConstant.REQUEST_LENGTH, MessageConstant.REQUEST_TYPE,
+                    getRandomPieceIndex());
+            System.out.println("send request to Peer: " + peer.getPeerId());
+            return send(requestMessage);
         } else {
-            return false;
+                return false;
         }
+
     }
 
     private boolean sendPiece(int pieceID){

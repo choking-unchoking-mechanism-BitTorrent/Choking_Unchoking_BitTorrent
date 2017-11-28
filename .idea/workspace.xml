@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8cd817f5-570c-4217-b68a-5a6b1f3069f6" name="Default" comment="Add implementation of analyzers and exceptions.">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/message/BitField.class" afterPath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/message/BitField.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/Connection.class" afterPath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/Connection.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/PeerProcess.class" afterPath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/PeerProcess.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Config/PeerInfo.cfg" afterPath="$PROJECT_DIR$/Config/PeerInfo.cfg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/log_peer_1002.log" afterPath="$PROJECT_DIR$/log_peer_1002.log" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/message/BitField.java" afterPath="$PROJECT_DIR$/src/message/BitField.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/peer/Connection.java" afterPath="$PROJECT_DIR$/src/peer/Connection.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/peer/PeerProcess.java" afterPath="$PROJECT_DIR$/src/peer/PeerProcess.java" />
@@ -21,57 +26,47 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PeerInfo.cfg" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Config/PeerInfo.cfg">
+      <file leaf-file-name="PeerProcess.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/peer/PeerProcess.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="23" lean-forward="true" selection-start-line="1" selection-start-column="23" selection-end-line="1" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Handshake.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/message/Handshake.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" column="38" lean-forward="false" selection-start-line="17" selection-start-column="38" selection-end-line="17" selection-end-column="38" />
+            <state relative-caret-position="277">
+              <caret line="246" column="39" lean-forward="false" selection-start-line="246" selection-start-column="35" selection-end-line="246" selection-end-column="39" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#9897#9898#0" expanded="true" />
+                <element signature="e#9929#9930#0" expanded="true" />
+                <element signature="e#9979#9980#0" expanded="true" />
+                <element signature="e#10025#10026#0" expanded="true" />
+                <element signature="e#11450#11451#0" expanded="true" />
+                <element signature="e#11489#11490#0" expanded="true" />
+                <element signature="e#11547#11548#0" expanded="true" />
+                <element signature="e#11589#11590#0" expanded="true" />
+                <element signature="e#11642#11643#0" expanded="true" />
+                <element signature="e#11681#11682#0" expanded="true" />
+                <element signature="e#11739#11740#0" expanded="true" />
+                <element signature="e#11774#11775#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Common.cfg" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Config/Common.cfg">
+      <file leaf-file-name="Server.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/peer/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="15" lean-forward="true" selection-start-line="4" selection-start-column="15" selection-end-line="4" selection-end-column="15" />
+            <state relative-caret-position="-401">
+              <caret line="50" column="42" lean-forward="false" selection-start-line="50" selection-start-column="25" selection-end-line="50" selection-end-column="42" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PeerProcess.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/peer/PeerProcess.java">
+      <file leaf-file-name="Client.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/peer/Client.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="32">
-              <caret line="269" column="47" lean-forward="false" selection-start-line="269" selection-start-column="29" selection-end-line="269" selection-end-column="47" />
+            <state relative-caret-position="170">
+              <caret line="67" column="23" lean-forward="false" selection-start-line="67" selection-start-column="21" selection-end-line="67" selection-end-column="23" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#9442#9443#0" expanded="true" />
-                <element signature="e#9474#9475#0" expanded="true" />
-                <element signature="e#9524#9525#0" expanded="true" />
-                <element signature="e#9570#9571#0" expanded="true" />
-                <element signature="e#10995#10996#0" expanded="true" />
-                <element signature="e#11034#11035#0" expanded="true" />
-                <element signature="e#11092#11093#0" expanded="true" />
-                <element signature="e#11134#11135#0" expanded="true" />
-                <element signature="e#11187#11188#0" expanded="true" />
-                <element signature="e#11226#11227#0" expanded="true" />
-                <element signature="e#11284#11285#0" expanded="true" />
-                <element signature="e#11319#11320#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -80,9 +75,12 @@
       <file leaf-file-name="BitField.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/message/BitField.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
-              <caret line="37" column="32" lean-forward="false" selection-start-line="37" selection-start-column="32" selection-end-line="37" selection-end-column="32" />
-              <folding />
+            <state relative-caret-position="225">
+              <caret line="66" column="9" lean-forward="true" selection-start-line="66" selection-start-column="9" selection-end-line="66" selection-end-column="9" />
+              <folding>
+                <element signature="e#2111#2112#0" expanded="true" />
+                <element signature="e#2141#2142#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -100,13 +98,33 @@
       <file leaf-file-name="Connection.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/peer/Connection.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="366">
-              <caret line="128" column="33" lean-forward="false" selection-start-line="128" selection-start-column="0" selection-end-line="129" selection-end-column="0" />
+            <state relative-caret-position="217">
+              <caret line="346" column="68" lean-forward="false" selection-start-line="346" selection-start-column="57" selection-end-line="346" selection-end-column="68" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1914#1915#0" expanded="true" />
                 <element signature="e#1952#1953#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Common.cfg" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Config/Common.cfg">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="15" lean-forward="true" selection-start-line="4" selection-start-column="15" selection-end-line="4" selection-end-column="15" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PeerInfo.cfg" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Config/PeerInfo.cfg">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="26" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="26" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -133,16 +151,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Logger.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/logger/Logger.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-121">
-              <caret line="80" column="44" lean-forward="false" selection-start-line="80" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -158,7 +166,6 @@
       <find>lastReceive</find>
       <find>sendBitfield</find>
       <find>sendHave</find>
-      <find>timer</find>
       <find>inputStream</find>
       <find>updatePreferredNeighbors</find>
       <find>handshake</find>
@@ -172,8 +179,13 @@
       <find>connect</find>
       <find>reply</find>
       <find>interestedPieces</find>
-      <find>interestPeer</find>
       <find>&lt;&lt;</find>
+      <find>interestPeer</find>
+      <find>sendRequest</find>
+      <find>prefered</find>
+      <find>timer</find>
+      <find>timertask</find>
+      <find>file</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -214,12 +226,12 @@
         <option value="$PROJECT_DIR$/Config/Common.cfg" />
         <option value="$PROJECT_DIR$/log_peer_1001.log" />
         <option value="$PROJECT_DIR$/src/logger/Logger.java" />
-        <option value="$PROJECT_DIR$/Config/PeerInfo.cfg" />
         <option value="$PROJECT_DIR$/src/message/Handshake.java" />
         <option value="$PROJECT_DIR$/src/message/Message.java" />
-        <option value="$PROJECT_DIR$/src/peer/PeerProcess.java" />
+        <option value="$PROJECT_DIR$/Config/PeerInfo.cfg" />
         <option value="$PROJECT_DIR$/src/peer/Connection.java" />
         <option value="$PROJECT_DIR$/src/message/BitField.java" />
+        <option value="$PROJECT_DIR$/src/peer/PeerProcess.java" />
       </list>
     </option>
   </component>
@@ -385,20 +397,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="in" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Choking_Unchoking_BitTorrent" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Choking_Unchoking_BitTorrent" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="Config" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -427,9 +425,9 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.annotationProcessors" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="FullScreen" value="true" />
   </component>
   <component name="RecentsManager">
@@ -697,14 +695,42 @@
       <option name="project" value="LOCAL" />
       <updated>1508960988753</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Add implementation of analyzers and exceptions.">
+      <created>1511881629698</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1511881629698</updated>
+    </task>
+    <task id="LOCAL-00003" summary="fix the bug that even if not interested still send request">
+      <created>1511881785943</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1511881785943</updated>
+    </task>
+    <task id="LOCAL-00004" summary="add some debug information">
+      <created>1511882417562</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1511882417562</updated>
+    </task>
+    <task id="LOCAL-00005" summary="changes the byte convert way">
+      <created>1511883251844</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1511883251844</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
     <option name="totallyTimeSpent" value="13610000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <frame x="0" y="0" width="1280" height="800" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -714,9 +740,9 @@
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32843137" sideWeight="0.503125" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.369863" sideWeight="0.503231" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.369863" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.369863" sideWeight="0.49676898" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32739726" sideWeight="0.496875" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.67733335" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -746,10 +772,12 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Add implementation of analyzers and exceptions." />
     <MESSAGE value="Test Interested &amp; NotInterested successfully." />
+    <MESSAGE value="Add implementation of analyzers and exceptions." />
     <MESSAGE value="fix the bug that even if not interested still send request" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix the bug that even if not interested still send request" />
+    <MESSAGE value="add some debug information" />
+    <MESSAGE value="changes the byte convert way" />
+    <option name="LAST_COMMIT_MESSAGE" value="changes the byte convert way" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -966,29 +994,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/peer/Server.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-60">
-          <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/src.zip!/java/lang/Thread.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="194">
           <caret line="695" column="29" lean-forward="false" selection-start-line="695" selection-start-column="29" selection-end-line="695" selection-end-column="29" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/peer/Client.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="67" column="23" lean-forward="false" selection-start-line="67" selection-start-column="21" selection-end-line="67" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1070,22 +1080,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Config/Common.cfg">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="15" lean-forward="true" selection-start-line="4" selection-start-column="15" selection-end-line="4" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Config/PeerInfo.cfg">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="23" lean-forward="true" selection-start-line="1" selection-start-column="23" selection-end-line="1" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/logger/Logger.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-121">
@@ -1130,32 +1124,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/peer/PeerProcess.java">
+    <entry file="file://$PROJECT_DIR$/src/peer/Server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="32">
-          <caret line="269" column="47" lean-forward="false" selection-start-line="269" selection-start-column="29" selection-end-line="269" selection-end-column="47" />
+        <state relative-caret-position="-401">
+          <caret line="50" column="42" lean-forward="false" selection-start-line="50" selection-start-column="25" selection-end-line="50" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/peer/Client.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="67" column="23" lean-forward="false" selection-start-line="67" selection-start-column="21" selection-end-line="67" selection-end-column="23" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#9442#9443#0" expanded="true" />
-            <element signature="e#9474#9475#0" expanded="true" />
-            <element signature="e#9524#9525#0" expanded="true" />
-            <element signature="e#9570#9571#0" expanded="true" />
-            <element signature="e#10995#10996#0" expanded="true" />
-            <element signature="e#11034#11035#0" expanded="true" />
-            <element signature="e#11092#11093#0" expanded="true" />
-            <element signature="e#11134#11135#0" expanded="true" />
-            <element signature="e#11187#11188#0" expanded="true" />
-            <element signature="e#11226#11227#0" expanded="true" />
-            <element signature="e#11284#11285#0" expanded="true" />
-            <element signature="e#11319#11320#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Config/Common.cfg">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="15" lean-forward="true" selection-start-line="4" selection-start-column="15" selection-end-line="4" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Config/PeerInfo.cfg">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="26" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="26" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/peer/Connection.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="366">
-          <caret line="128" column="33" lean-forward="false" selection-start-line="128" selection-start-column="0" selection-end-line="129" selection-end-column="0" />
+        <state relative-caret-position="217">
+          <caret line="346" column="68" lean-forward="false" selection-start-line="346" selection-start-column="57" selection-end-line="346" selection-end-column="68" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1914#1915#0" expanded="true" />
@@ -1164,11 +1170,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/peer/PeerProcess.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="277">
+          <caret line="246" column="39" lean-forward="false" selection-start-line="246" selection-start-column="35" selection-end-line="246" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#9897#9898#0" expanded="true" />
+            <element signature="e#9929#9930#0" expanded="true" />
+            <element signature="e#9979#9980#0" expanded="true" />
+            <element signature="e#10025#10026#0" expanded="true" />
+            <element signature="e#11450#11451#0" expanded="true" />
+            <element signature="e#11489#11490#0" expanded="true" />
+            <element signature="e#11547#11548#0" expanded="true" />
+            <element signature="e#11589#11590#0" expanded="true" />
+            <element signature="e#11642#11643#0" expanded="true" />
+            <element signature="e#11681#11682#0" expanded="true" />
+            <element signature="e#11739#11740#0" expanded="true" />
+            <element signature="e#11774#11775#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/message/BitField.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="37" column="32" lean-forward="false" selection-start-line="37" selection-start-column="32" selection-end-line="37" selection-end-column="32" />
-          <folding />
+        <state relative-caret-position="225">
+          <caret line="66" column="9" lean-forward="true" selection-start-line="66" selection-start-column="9" selection-end-line="66" selection-end-column="9" />
+          <folding>
+            <element signature="e#2111#2112#0" expanded="true" />
+            <element signature="e#2141#2142#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

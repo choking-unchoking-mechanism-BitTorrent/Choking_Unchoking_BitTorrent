@@ -10,10 +10,7 @@ import exception.logger.LoggerIOException;
 import logger.Logger;
 import message.BitField;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -232,9 +229,23 @@ public class PeerProcess {
         int start = fileIndex * pieceSize;
         return Arrays.copyOfRange(file, start, start + pieceSize);
     }
-    public synchronized void writeIntoFile(byte[] partOfFile, int index){
+    public synchronized void writeIntoFile(byte[] partOfFile, int index) throws IOException {
+        boolean finish = true;
         for (int i = 0; i < partOfFile.length; i++){
             file[i+index*pieceSize] = partOfFile[i];
+        }
+        BitField bitField = this.getBitField(peerId);
+        byte[] payload = bitField.getPayload();
+        for(int i = 0; i < payload.length; i++){
+            if((payload[i] & 0xFF) != 0xFF){
+                finish = false;
+            }
+        }
+        if(finish){
+            System.out.println("The file complete!");
+            FileOutputStream fileOutputStream = new FileOutputStream("out/" + fileName);
+            fileOutputStream.write(file);
+            fileOutputStream.close();
         }
     }
     public void sendHave(int index){
