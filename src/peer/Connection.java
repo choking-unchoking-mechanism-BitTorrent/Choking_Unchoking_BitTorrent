@@ -4,9 +4,7 @@ import exception.message.MessageException;
 import logger.Logger;
 import message.*;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.*;
@@ -15,8 +13,8 @@ public class Connection extends Thread {
     private Socket socket;
     private Peer peer;
     private int myPeerID;
-    private OutputStream outputStream;
-    private InputStream inputStream;
+    private BufferedOutputStream outputStream;
+    private BufferedInputStream inputStream;
     private boolean preferN;
     private boolean opPrefer;
     private boolean interested;
@@ -36,8 +34,8 @@ public class Connection extends Thread {
         this.interested = false;
         this.broadcastHave = false;
         try {
-            this.outputStream = this.socket.getOutputStream();
-            this.inputStream = this.socket.getInputStream();
+            this.outputStream = new BufferedOutputStream(this.socket.getOutputStream());
+            this.inputStream = new BufferedInputStream(this.socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,8 +53,8 @@ public class Connection extends Thread {
         this.downloadBytes = 0;
         this.downloadSpeed = 0;
         try {
-            this.outputStream = this.socket.getOutputStream();
-            this.inputStream = this.socket.getInputStream();
+            this.outputStream = new BufferedOutputStream(this.socket.getOutputStream());
+            this.inputStream = new BufferedInputStream(this.socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -128,8 +126,10 @@ public class Connection extends Thread {
     }
 
     private boolean sendRequest(){
+        System.out.println("send request");
         Message requestMessage = new Message(MessageConstant.REQUEST_LENGTH, MessageConstant.REQUEST_TYPE,
                 getRandomPieceIndex());
+        System.out.println("generate message");
         return send(requestMessage);
     }
 
@@ -207,12 +207,14 @@ public class Connection extends Thread {
 
     //Get a random number of piece from peerId have but me don't have
     private synchronized byte[] getRandomPieceIndex(){
-        //TODO
+        System.out.println("enter get random");
         HashSet<Integer> set = process.getRequestingPeices();
+        System.out.println(set.size());
         int requestedPieceIndex;
         do {
             requestedPieceIndex = this.process.getInterestedPieces().get(new Random().nextInt(this.process.getInterestedPieces().size()));
-        } while (!set.contains(requestedPieceIndex));
+
+        } while (set.contains(requestedPieceIndex));
         System.out.println("Request peice index " + requestedPieceIndex);
         set.add(requestedPieceIndex);
         return ByteBuffer.allocate(4).putInt(requestedPieceIndex).array();
@@ -260,24 +262,34 @@ public class Connection extends Thread {
                 int result = inputStream.read(reply);
                 //if data arrived
                 while(result == 4){
+                    System.out.println("result: " + result);
+                    System.out.println("length: " + bytesToHex(reply));
                     int length = 0;
                     for (int i = 0; i < 4; i++){
-                        length += reply[i] << (3-i);
+                        length = reply[3] & 0xFF |
+                                (reply[2] & 0xFF) << 8 |
+                                (reply[1] & 0xFF) << 16 |
+                                (reply[0] & 0xFF) << 24;
                     }
+                    length--;
+                    System.out.println(length);
                     byte[] type = new byte[1];
                     result = inputStream.read(type);
+                    System.out.println("&&&&");
                     if (result != 1){
                         throw new MessageException();
                     }
                     byte[] payload = new byte[length];
                     result = inputStream.read(payload);
+                    System.out.println("$$$$");
+
                     if (result != length){
                         throw new MessageException();
                     }
-
+                    System.out.println("type: " + type[0]);
                     switch (type[0]){
                         case MessageConstant.UNCHOKE_TYPE:
-                            System.out.println("receive unchoked from : " + peer.getPeerId());
+                            System.out.println("Received unchocked from " + peer.getPeerId());
                             sendRequest();
                             break;
                         case MessageConstant.CHOKE_TYPE:
@@ -326,16 +338,14 @@ public class Connection extends Thread {
                             } else {
                                 sendNotInterested();
                             }
-                            downloadBytes+=length;
+                            downloadBytes += length;
                             //Send piece to file
                             process.writeIntoFile(Arrays.copyOfRange(reply, 5, reply.length), pieceNum3);
                             break;
                     }
-                    System.out.println("@");
-                    int count = inputStream.available();
-                    System.out.println("###" + count);
+                    System.out.println("@@@");
                     result = inputStream.read(reply);
-                    System.out.println(result);
+                    System.out.println("****");
                 }
             }catch(IOException e){
                 e.printStackTrace();

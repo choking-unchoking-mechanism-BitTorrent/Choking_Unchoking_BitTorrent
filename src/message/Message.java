@@ -16,7 +16,7 @@ public class Message {
 
     public Message(int length, byte type, byte[] payload) {
 
-        this.length = length;
+        this.length = length - 4;
         this.type = type;
         this.payload = payload;
     }
@@ -34,7 +34,7 @@ public class Message {
     }
 
     public void setLength(int length) {
-        this.length = length;
+        this.length = length - 4;
     }
 
     public void setType(byte type) {

@@ -2,12 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8cd817f5-570c-4217-b68a-5a6b1f3069f6" name="Default" comment="Add implementation of analyzers and exceptions.">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/message/Message.class" afterPath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/message/Message.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/Connection.class" afterPath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/Connection.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/PeerProcess$UpdateOptimisticNeighbor.class" afterPath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/PeerProcess$UpdateOptimisticNeighbor.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/PeerProcess$UpdatePreferredNeighbors.class" afterPath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/PeerProcess$UpdatePreferredNeighbors.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/PeerProcess.class" afterPath="$PROJECT_DIR$/out/production/Choking_Unchoking_BitTorrent/peer/PeerProcess.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/log_peer_1002.log" afterPath="$PROJECT_DIR$/log_peer_1002.log" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/message/Message.java" afterPath="$PROJECT_DIR$/src/message/Message.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/peer/Connection.java" afterPath="$PROJECT_DIR$/src/peer/Connection.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/peer/PeerProcess.java" afterPath="$PROJECT_DIR$/src/peer/PeerProcess.java" />
     </list>
@@ -60,32 +62,19 @@
       <file leaf-file-name="PeerProcess.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/peer/PeerProcess.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="180" column="22" lean-forward="false" selection-start-line="180" selection-start-column="19" selection-end-line="180" selection-end-column="22" />
+            <state relative-caret-position="97">
+              <caret line="181" column="22" lean-forward="false" selection-start-line="181" selection-start-column="22" selection-end-line="181" selection-end-column="22" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#9436#9437#0" expanded="true" />
-                <element signature="e#9468#9469#0" expanded="true" />
-                <element signature="e#9518#9519#0" expanded="true" />
-                <element signature="e#9564#9565#0" expanded="true" />
-                <element signature="e#10990#10991#0" expanded="true" />
-                <element signature="e#11029#11030#0" expanded="true" />
-                <element signature="e#11087#11088#0" expanded="true" />
-                <element signature="e#11129#11130#0" expanded="true" />
-                <element signature="e#11182#11183#0" expanded="true" />
-                <element signature="e#11221#11222#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Peer.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/peer/Peer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="269">
-              <caret line="21" column="12" lean-forward="false" selection-start-line="21" selection-start-column="12" selection-end-line="21" selection-end-column="12" />
-              <folding>
-                <element signature="imports" expanded="true" />
+                <marker date="1511835828750" expanded="true" signature="10275:10537" ph="{...}" />
+                <marker date="1511835828750" expanded="true" signature="10582:10941" ph="{...}" />
+                <marker date="1511835828750" expanded="true" signature="10994:11005" ph=" { " />
+                <marker date="1511835828750" expanded="true" signature="11029:11035" ph=" }" />
+                <marker date="1511835828750" expanded="true" signature="11091:11102" ph=" { " />
+                <marker date="1511835828750" expanded="true" signature="11129:11135" ph=" }" />
+                <marker date="1511835828750" expanded="true" signature="11186:11197" ph=" { " />
+                <marker date="1511835828750" expanded="true" signature="11221:11227" ph=" }" />
+                <marker date="1511835828750" expanded="true" signature="11272:11444" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -114,13 +103,23 @@
       <file leaf-file-name="Connection.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/peer/Connection.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1507">
-              <caret line="334" column="53" lean-forward="false" selection-start-line="334" selection-start-column="44" selection-end-line="334" selection-end-column="53" />
+            <state relative-caret-position="75">
+              <caret line="292" column="39" lean-forward="false" selection-start-line="292" selection-start-column="28" selection-end-line="292" selection-end-column="39" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1863#1864#0" expanded="true" />
-                <element signature="e#1901#1902#0" expanded="true" />
+                <element signature="e#1914#1915#0" expanded="true" />
+                <element signature="e#1952#1953#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MessageConstant.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/message/MessageConstant.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="225">
+              <caret line="15" column="53" lean-forward="false" selection-start-line="15" selection-start-column="53" selection-end-line="15" selection-end-column="53" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -128,8 +127,8 @@
       <file leaf-file-name="Message.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/message/Message.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="256">
-              <caret line="46" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+            <state relative-caret-position="135">
+              <caret line="18" column="32" lean-forward="false" selection-start-line="18" selection-start-column="32" selection-end-line="18" selection-end-column="32" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -175,6 +174,7 @@
       <find>sendp</find>
       <find>connect</find>
       <find>reply</find>
+      <find>&lt;&lt;</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -220,6 +220,7 @@
         <option value="$PROJECT_DIR$/src/message/BitField.java" />
         <option value="$PROJECT_DIR$/src/peer/PeerProcess.java" />
         <option value="$PROJECT_DIR$/src/peer/Connection.java" />
+        <option value="$PROJECT_DIR$/src/message/Message.java" />
       </list>
     </option>
   </component>
@@ -949,14 +950,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/message/MessageConstant.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/exception/message/MessageException.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -1129,28 +1122,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/peer/PeerProcess.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="180" column="22" lean-forward="false" selection-start-line="180" selection-start-column="19" selection-end-line="180" selection-end-column="22" />
+        <state relative-caret-position="97">
+          <caret line="181" column="22" lean-forward="false" selection-start-line="181" selection-start-column="22" selection-end-line="181" selection-end-column="22" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#9436#9437#0" expanded="true" />
-            <element signature="e#9468#9469#0" expanded="true" />
-            <element signature="e#9518#9519#0" expanded="true" />
-            <element signature="e#9564#9565#0" expanded="true" />
-            <element signature="e#10990#10991#0" expanded="true" />
-            <element signature="e#11029#11030#0" expanded="true" />
-            <element signature="e#11087#11088#0" expanded="true" />
-            <element signature="e#11129#11130#0" expanded="true" />
-            <element signature="e#11182#11183#0" expanded="true" />
-            <element signature="e#11221#11222#0" expanded="true" />
+            <marker date="1511835828750" expanded="true" signature="10275:10537" ph="{...}" />
+            <marker date="1511835828750" expanded="true" signature="10582:10941" ph="{...}" />
+            <marker date="1511835828750" expanded="true" signature="10994:11005" ph=" { " />
+            <marker date="1511835828750" expanded="true" signature="11029:11035" ph=" }" />
+            <marker date="1511835828750" expanded="true" signature="11091:11102" ph=" { " />
+            <marker date="1511835828750" expanded="true" signature="11129:11135" ph=" }" />
+            <marker date="1511835828750" expanded="true" signature="11186:11197" ph=" { " />
+            <marker date="1511835828750" expanded="true" signature="11221:11227" ph=" }" />
+            <marker date="1511835828750" expanded="true" signature="11272:11444" ph="{...}" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/message/MessageConstant.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="53" lean-forward="false" selection-start-line="15" selection-start-column="53" selection-end-line="15" selection-end-column="53" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/message/Message.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="46" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+        <state relative-caret-position="135">
+          <caret line="18" column="32" lean-forward="false" selection-start-line="18" selection-start-column="32" selection-end-line="18" selection-end-column="32" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1159,12 +1159,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/peer/Connection.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1507">
-          <caret line="334" column="53" lean-forward="false" selection-start-line="334" selection-start-column="44" selection-end-line="334" selection-end-column="53" />
+        <state relative-caret-position="75">
+          <caret line="292" column="39" lean-forward="false" selection-start-line="292" selection-start-column="28" selection-end-line="292" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1863#1864#0" expanded="true" />
-            <element signature="e#1901#1902#0" expanded="true" />
+            <element signature="e#1914#1915#0" expanded="true" />
+            <element signature="e#1952#1953#0" expanded="true" />
           </folding>
         </state>
       </provider>
