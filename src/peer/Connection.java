@@ -130,6 +130,7 @@ public class Connection extends Thread {
             if(process.getInterestPeer().get(peer.getPeerId()) == 1){
                 Message requestMessage = new Message(MessageConstant.REQUEST_LENGTH, MessageConstant.REQUEST_TYPE,
                         getRandomPieceIndex());
+                System.out.println("send request to Peer: " + peer.getPeerId());
                 return send(requestMessage);
             } else {
                 return false;
@@ -308,6 +309,7 @@ public class Connection extends Thread {
                             }
                             break;
                         case MessageConstant.REQUEST_TYPE:
+                            System.out.println("Receive request from Peer: " + peer.getPeerId());
                             int pieceNum2 = 0;
                             for (int i = 0; i < 4; i++){
                                 pieceNum2 += reply[i] << (3-i);
