@@ -139,9 +139,19 @@ public class Connection extends Thread {
     }
 
     private boolean sendPiece(int pieceID){
-        Message pieceMessage = new Message(process.getPieceSize(), MessageConstant.PIECE_TYPE,
-                process.getFilePart(pieceID));
-        System.out.println("Send piece index: " + pieceID);
+        byte[] pieceContent = process.getFilePart(pieceID);
+        byte[] pieceNum = ByteBuffer.allocate(4).putInt(pieceID).array();
+        byte[] content = new byte[pieceContent.length + pieceNum.length];
+        for (int i = 0; i < 4; i++){
+            content[i] = pieceNum[i];
+        }
+        for (int i = 0; i < pieceContent.length; i++){
+            content[i+4] = pieceContent[i];
+        }
+        //4 bytes length + 1 byte type + 4 byte index + length
+        Message pieceMessage = new Message(pieceContent.length + 9, MessageConstant.PIECE_TYPE,
+                content);
+        System.out.println("Send piece index: " + pieceID + ", length : " + (process.getPieceSize() + 5));
         return send(pieceMessage);
     }
 
@@ -190,9 +200,12 @@ public class Connection extends Thread {
             //Ex. 4 pieces here but we get 8 interested because 1002 has 8 bits 0 and 1001 has 8 bits 1.
             //In fact, 1002's bit field should be 00001111.
             for (int j = 7; j > -1; j--) {
-                if ((((1 << j) & myByte) == 0) && (((1 << j) & neighborByte) == 1)) {
+                if ((((1&0xFF) << j) & myByte) == 0 && (((1&0xFF) << j) & neighborByte) != 0) {
                     isInterested = true;
-                    process.getInterestedPieces().add((i-5) * 8 + 7 - j);
+                    //Not exist.
+                    if (process.getInterestedPieces().indexOf((i-5) * 8 + 7 - j) == -1){
+                        process.getInterestedPieces().add((i-5) * 8 + 7 - j);
+                    }
                 } else if(process.getNotInterestedPieces().contains(new Integer((i-5) * 8 + 7 - j))) {
                     process.getNotInterestedPieces().remove(new Integer((i-5) * 8 + 7 - j));
                 }
@@ -221,7 +234,7 @@ public class Connection extends Thread {
         HashSet<Integer> set = process.getRequestingPeices();
         int requestedPieceIndex;
         do {
-            System.out.println(this.process.getInterestedPieces().size());
+            //System.out.println(this.process.getInterestedPieces().size());
             requestedPieceIndex = this.process.getInterestedPieces().get(new Random().
                     nextInt(this.process.getInterestedPieces().size()));
         } while (set.contains(requestedPieceIndex));
@@ -268,6 +281,7 @@ public class Connection extends Thread {
             return;
         }
         sendChocked();
+
         while (true){
             //Send
             if (broadcastHave){
@@ -303,12 +317,12 @@ public class Connection extends Thread {
 //                    for (int i = 0; i < 4; i++){
 //                        length += reply[i] << (3-i);
 //                    }
-                    for (int i = 0; i < 4; i++){
-                        length = reply[3] & 0xFF |
-                                (reply[2] & 0xFF) << 8 |
-                                (reply[1] & 0xFF) << 16 |
-                                (reply[0] & 0xFF) << 24;
-                        }
+                    //for (int i = 0; i < 4; i++){
+                    length = reply[3] & 0xFF |
+                            (reply[2] & 0xFF) << 8 |
+                            (reply[1] & 0xFF) << 16 |
+                            (reply[0] & 0xFF) << 24;
+                        //}
                     length--;
                     byte[] type = new byte[1];
                     result = inputStream.read(type);
@@ -317,6 +331,7 @@ public class Connection extends Thread {
                     }
                     byte[] payload = null;
                     if (length > 0){
+                        System.out.println(length);
                         payload = new byte[length];
                         result = inputStream.read(payload);
                         if (result != length){
@@ -342,12 +357,12 @@ public class Connection extends Thread {
                         case MessageConstant.HAVE_TYPE:
                             //Update here
                             int pieceNum1 = 0;
-                            for (int i = 0; i < 4; i++) {
-                                pieceNum1 += reply[3] & 0xFF |
-                                        (reply[2] & 0xFF) << 8 |
-                                        (reply[1] & 0xFF) << 16 |
-                                        (reply[0] & 0xFF) << 24;
-                            }
+                            //for (int i = 0; i < 4; i++) {
+                                pieceNum1 += payload[3] & 0xFF |
+                                        (payload[2] & 0xFF) << 8 |
+                                        (payload[1] & 0xFF) << 16 |
+                                        (payload[0] & 0xFF) << 24;
+                            //}
                             process.updateBitField(pieceNum1, peer.getPeerId());
                             if (isInterested(peer.getPeerId())) {
                                 sendInterested();
@@ -377,14 +392,14 @@ public class Connection extends Thread {
                             break;
                         case MessageConstant.PIECE_TYPE:
                             //Get piece index
-                            int pieceNum3 = 0;
-                            for (int i = 0; i < 4; i++) {
-                                pieceNum3 += reply[i] << (3 - i);
-                            }
+                            int pieceNum3 = payload[3] & 0xFF |
+                                    (payload[2] & 0xFF) << 8 |
+                                    (payload[1] & 0xFF) << 16 |
+                                    (payload[0] & 0xFF) << 24;
                             System.out.print("Receive piece index: " + pieceNum3);
                             //Update my bit field
                             process.updateBitField(pieceNum3, peer.getPeerId());
-                            process.writeIntoFile(payload, pieceNum3);
+                            process.writeIntoFile(Arrays.copyOfRange(payload, 4, payload.length), pieceNum3);
                             if (isInterested(peer.getPeerId())) {
                                 //after receive a piece, continue to send request
                                 sendRequest();
@@ -393,7 +408,7 @@ public class Connection extends Thread {
                             }
                             downloadBytes += length;
                             //Send piece to file
-                            process.writeIntoFile(Arrays.copyOfRange(reply, 5, reply.length), pieceNum3);
+                            process.writeIntoFile(Arrays.copyOfRange(payload, 5, payload.length), pieceNum3);
                             break;
                         default:
                             System.out.println("Unexpected message");
@@ -401,6 +416,8 @@ public class Connection extends Thread {
                     }
                     if (inputStream.available() > 0)
                         result = inputStream.read(reply);
+                    else
+                        break;
                 }
             }catch(IOException e){
                 e.printStackTrace();
