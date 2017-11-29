@@ -137,6 +137,11 @@ public class PeerProcess {
 
         //build connections
         this.connectionHashMap = new HashMap<>();
+        updatePreferredNeighbors = new UpdatePreferredNeighbors();
+        updateOptimisticNeighbor = new UpdateOptimisticNeighbor();
+        System.out.println(unchokingInterval);
+        timer.schedule(updatePreferredNeighbors, 6000, this.unchokingInterval);
+        timer.schedule(updateOptimisticNeighbor, 6000, this.optimisticUnchokingInterval);
         for (Peer peer : peers.values()) {
             if (peer.getPeerId() == this.peerId){
                 while (true) {
@@ -148,13 +153,13 @@ public class PeerProcess {
                         System.out.println("Connected to " + ip);
                         Connection connection;
                         for (Peer p : peers.values()) {
-                            if (p.getHost().equals(ip)) {
+                            if (p.getHost().equals(ip) && p.getPeerId() != peerId) {
                                 connection = new Connection(receivedSocket, this, p, peerId);
                                 this.connectionHashMap.put(p.getPeerId(), connection);
-                                System.out.println("preferredNeighbors: " + preferredNeighbors.keySet().toString());
-                                if (preferredNeighbors.containsKey(p.getPeerId())) {
+                                //System.out.println("preferredNeighbors: " + preferredNeighbors.keySet().toString());
+                                /*if (preferredNeighbors.containsKey(p.getPeerId())) {
                                     connection.setPreferN(true);
-                                }
+                                }*/
                                 connection.start();
                             }
                         }
@@ -165,10 +170,6 @@ public class PeerProcess {
             }
             connect(peer);
         }
-        updatePreferredNeighbors = new UpdatePreferredNeighbors();
-        updateOptimisticNeighbor = new UpdateOptimisticNeighbor();
-        timer.schedule(updatePreferredNeighbors, 0, this.unchokingInterval);
-        timer.schedule(updateOptimisticNeighbor, 0, this.optimisticUnchokingInterval);
     }
 
     public void connect(Peer peer) {
@@ -179,8 +180,8 @@ public class PeerProcess {
             Logger.connectTCP(peer.getPeerId());
             System.out.println("Connected to " + peer.getPeerId());
             connectionHashMap.put(peer.getPeerId(), connection);
-            if (preferredNeighbors.containsKey(peer.getPeerId()))
-                connection.setPreferN(true);
+            /*if (preferredNeighbors.containsKey(peer.getPeerId()))
+                connection.setPreferN(true);*/
             connection.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -199,12 +200,14 @@ public class PeerProcess {
                 map.put((Integer)e.getKey(), (double)c.getDownloadBytes() / this.scheduledExecutionTime());
                 c.doneCalculating();
             }
-            //TODO decide prefer neighbor here
+
             preferredNeighbors.clear();
             for (int i = 0; i < numberOfPreferredNeighbors; i++){
                 double max = -1;
                 int id = -1;
                 for (Map.Entry e : map.entrySet()){
+                    //System.out.println("id : "+e.getKey());
+                    //System.out.println("speed : "+e.getValue());
                     if ((Double)e.getValue() > max && interestPeer.containsKey(e.getKey())){
                         max = (Double)e.getValue();
                         id = (Integer)e.getKey();
@@ -213,11 +216,18 @@ public class PeerProcess {
                 if (max == -1 || id == -1){
                     return;
                 }
+                if (!connectionHashMap.get(id).getPreferN()){
+                    connectionHashMap.get(id).setUnchoke(true);
+                }
                 preferredNeighbors.put(id, peers.get(id));
                 map.remove(id);
-                connectionHashMap.get(id).setPreferN(true);
+                //connectionHashMap.get(id).setSendRequest(true);
+            }
+            for (Map.Entry e : map.entrySet()){
+                connectionHashMap.get(e.getKey()).setPreferN(false);
             }
         }
+
     }
 
     private class UpdateOptimisticNeighbor extends TimerTask {
@@ -233,6 +243,9 @@ public class PeerProcess {
                 }
             }
             //Get random index.
+            if (connections.size() == 0){
+                return;
+            }
             Random rand = new Random();
             int randIndex = rand.nextInt(connections.size());
             connections.get(randIndex).setOpPrefer(true);
@@ -256,7 +269,8 @@ public class PeerProcess {
         File f = new File(fileName);
         try{
             FileInputStream fs = new FileInputStream(f);
-            fs.read(file);
+            int result = fs.read(file);
+            System.out.println("Bytes of file : " + result);
         }catch (Exception e){
             e.printStackTrace();
             return false;
@@ -306,7 +320,7 @@ public class PeerProcess {
 //            }
 //        }
         for (Peer peer : peers.values()) {
-            if(peer.getHasCompleteFile())
+            if(!peer.getHasCompleteFile())
                 return false;
         }
         return true;
@@ -326,6 +340,10 @@ public class PeerProcess {
             if (isInterest){
                 interestPeer.put(peerId, peerId);
             }
+        }
+        System.out.println("Interest peer : ");
+        for (Map.Entry e : interestPeer.entrySet()){
+            System.out.println(e.getValue());
         }
     }
 
