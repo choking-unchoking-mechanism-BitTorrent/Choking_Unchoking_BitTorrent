@@ -81,24 +81,9 @@ public class BitField {
             }
             bitField[++i] = lastByte;
         }else {
-
-            if(payloadLength == 1){
-                i++;
-                bitField[i] = 0;
-                for(int j = 0; j < remaining; i++){
-                    bitField[i] = (byte) (bitField[i] | ((byte) (0x1 << (7-i))));
-                }
-            } else {
-                for(int k = 0; k < payloadLength-1; k++){
-                    bitField[++i] = (byte) 0xFF;
-                }
-                i++;
-                bitField[i] = 0;
-                for(int j = 0; j < remaining; i++){
-                    bitField[i] = (byte) (bitField[i] | ((byte) (0x1 << (7-i))));
-                }
+            for(int k = 0; k < payloadLength; k++){
+                bitField[++i] = (byte) 0xFF;
             }
-
         }
     }
 
@@ -118,7 +103,19 @@ public class BitField {
     }
     public void updateBitField(int pieceIndex){
         int i = (pieceIndex - 1) / 8;
-        int m = 7 - ((pieceIndex - 1) % 8);
+        System.out.println("The bitfield before updated is: " + Arrays.toString(getBooleanArray(bitField[i + 5])));
+
+        int m = 7 - ((pieceIndex) % 8);
         bitField[i + 5] = (byte) (bitField[i + 5] | (1 << m));
+        System.out.println("The updated bitfield is: " + Arrays.toString(getBooleanArray(bitField[i + 5])));
+
+    }
+    public static byte[] getBooleanArray(byte b) {
+        byte[] array = new byte[8];
+        for (int i = 7; i >= 0; i--) {
+            array[i] = (byte)(b & 1);
+            b = (byte) (b >> 1);
+        }
+        return array;
     }
 }

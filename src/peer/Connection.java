@@ -398,7 +398,7 @@ public class Connection extends Thread {
                                     (payload[0] & 0xFF) << 24;
                             System.out.print("Receive piece index: " + pieceNum3);
                             //Update my bit field
-                            process.updateBitField(pieceNum3, peer.getPeerId());
+                            process.updateBitField(pieceNum3, myPeerID);
                             process.writeIntoFile(Arrays.copyOfRange(payload, 4, payload.length), pieceNum3);
                             if (isInterested(peer.getPeerId())) {
                                 //after receive a piece, continue to send request
@@ -426,6 +426,7 @@ public class Connection extends Thread {
             }
         }
         try{
+            System.out.println("close stream");
             outputStream.close();
             inputStream.close();
         }catch (Exception e){

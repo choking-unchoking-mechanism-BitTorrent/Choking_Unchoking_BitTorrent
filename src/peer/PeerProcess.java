@@ -296,9 +296,9 @@ public class PeerProcess {
             file[i+index*pieceSize] = partOfFile[i];
         }
         BitField bitField = this.getBitField(peerId);
-        byte[] payload = bitField.getPayload();
-        for(int i = 0; i < payload.length; i++){
-            if((payload[i] & 0xFF) != 0xFF){
+        byte[] bitFieldByteArray = bitField.getBitFieldByteArray();
+        for(int i = 0; i < bitFieldByteArray.length - 5; i++){
+            if((bitFieldByteArray[i+5]) != (byte)255){
                 finish = false;
             }
         }
@@ -328,14 +328,34 @@ public class PeerProcess {
 //            }
 //        }
         for (Peer peer : peers.values()) {
-            if(!peer.getHasCompleteFile())
+            if(!peer.getHasCompleteFile()){
                 return false;
+            }
         }
         return true;
     }
+    public static byte[] getBooleanArray(byte b) {
+        byte[] array = new byte[8];
+        for (int i = 7; i >= 0; i--) {
+            array[i] = (byte)(b & 1);
+            b = (byte) (b >> 1);
+        }
+        return array;
+    }
     public synchronized void updateBitField(int pieceIndex, int peerId){
         BitField bitField = bitFields.get(peerId);
+        System.out.println("we will update bit field for pieceIndex: " + pieceIndex);
         bitField.updateBitField(pieceIndex);
+        byte[] bitFieldByteArray = bitField.getBitFieldByteArray();
+        System.out.println("bitfield length: " + bitFieldByteArray.length);
+        System.out.println("payload: " + Arrays.toString(getBooleanArray(bitFieldByteArray[5])));
+        for(int i = 0; i < bitFieldByteArray.length-5; i++){
+            if(bitFieldByteArray[i+5] != (byte)255){
+                return;
+            }
+        }
+        System.out.println("peer: " + peerId + "become completed");
+        peers.get(peerId).setHasCompleteFile(true);
         //TODO update bit field here, then decide if we should send interest
     }
 
