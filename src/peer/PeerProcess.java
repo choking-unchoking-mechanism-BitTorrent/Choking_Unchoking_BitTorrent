@@ -25,6 +25,7 @@ public class PeerProcess {
     private byte[] file;
     private int fileSize;
     private int pieceSize;
+    private int pieceNum;
     private HashMap<Integer, Peer> peers;
     private HashMap<Integer, Peer> preferredNeighbors;
     private HashMap<Integer ,BitField> bitFields;
@@ -64,6 +65,7 @@ public class PeerProcess {
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.pieceSize = pieceSize;
+        pieceNum = 0;
         this.peers = peers;
         this.preferredNeighbors = new HashMap<>();
         this.interestedPieces = new ArrayList<>();
@@ -91,7 +93,9 @@ public class PeerProcess {
             }
 
             List<PeerInfo> peerInfos = peerInfoAnalyzer.analyze();
+            //Error here
             int piecesNumber = (int) Math.ceil((double) this.fileSize / this.pieceSize);
+            pieceNum = piecesNumber;
             this.bitFields = new HashMap<>();
             this.peers = new HashMap<>();
             for (PeerInfo peerInfo : peerInfos) {
@@ -280,6 +284,10 @@ public class PeerProcess {
     public synchronized byte[] getFilePart(int fileIndex){
         //start from 0.
         int start = fileIndex * pieceSize;
+        //Last piece
+        if (fileIndex + 1== pieceNum){
+            return Arrays.copyOfRange(file, start, fileSize);
+        }
         return Arrays.copyOfRange(file, start, start + pieceSize);
     }
     public synchronized void writeIntoFile(byte[] partOfFile, int index) throws IOException{

@@ -54,6 +54,9 @@ public class BitField {
         totalPieces = piecesNum;
         int payloadLength = (int)Math.ceil((double)totalPieces/8);
         int remaining = totalPieces % 8;
+        if (totalPieces <= 8){
+            remaining = 8 - totalPieces;
+        }
         messageLength = ByteBuffer.allocate(4).putInt(payloadLength).array();
         payload = new byte[payloadLength];
         bitField = new byte[payloadLength + 5];
@@ -69,6 +72,14 @@ public class BitField {
                 i++;
                 bitField[i] = 0;
             }
+            if (remaining == 0){
+                return;
+            }
+            byte lastByte = 0;
+            for (int j = 0; j < remaining; j++){
+                lastByte += ((1&0xFF) << (j));
+            }
+            bitField[++i] = lastByte;
         }else {
 
             if(payloadLength == 1){
