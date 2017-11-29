@@ -1,5 +1,8 @@
 package message;
 
+import peer.Connection;
+import peer.PeerProcess;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -14,7 +17,6 @@ public class BitField {
     private  byte[] messageLength = new byte[4];
     private final static byte type = 5;
     public  byte[] bitField;
-
     private String bytesToHex(byte[] bytes) {
         char[] hexArray = "0123456789ABCDEF".toCharArray();
         char[] hexChars = new char[bytes.length * 2];
@@ -36,6 +38,9 @@ public class BitField {
         bitField = new byte[num + 5];
         bitField = content;
         payload = new byte[num];
+        bitField = content;
+        System.out.println("debug: " + bytesToHex(bitField));
+
         for (int i = 0; i < num; i++){
             payload[i] = content[5+i];
         }
@@ -67,10 +72,6 @@ public class BitField {
         }
     }
 
-    public byte[] getPayload() {
-        return payload;
-    }
-
     public byte[] getBitFieldByteArray(){
 //        byte[] array = new byte[5 + bitField.length];
 //        for (int i = 0; i < 4; i++){
@@ -82,7 +83,9 @@ public class BitField {
 //        }
         return bitField;
     }
-
+    public byte[] getPayload() {
+        return payload;
+    }
     public void updateBitField(int pieceIndex){
         int i = (pieceIndex - 1) / 8;
         int m = 7 - ((pieceIndex - 1) % 8);
