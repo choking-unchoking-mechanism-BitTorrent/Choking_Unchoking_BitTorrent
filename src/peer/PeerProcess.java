@@ -149,33 +149,38 @@ public class PeerProcess {
         timer.schedule(updatePreferredNeighbors, 6000, this.unchokingInterval);
         timer.schedule(updateOptimisticNeighbor, 6000, this.optimisticUnchokingInterval);
         timer.schedule(checkALlFinished, 20000, 100);
+        ServerSocket serverSocket = null;
+        try{
+            serverSocket = new ServerSocket(me.getPort());
+        }catch(IOException e){
+            e.printStackTrace();
+        }
         for (Peer peer : peers.values()) {
-            if (peer.getPeerId() == this.peerId){
-                while (true) {
-                    try {
-                        ServerSocket serverSocket = new ServerSocket(me.getPort());
-                        System.out.println("Wait connecting");
-                        Socket receivedSocket = serverSocket.accept();
-                        String ip = receivedSocket.getRemoteSocketAddress().toString().split(":")[0].substring(1);
-                        System.out.println("Connected to " + ip);
-                        Connection connection;
-                        for (Peer p : peers.values()) {
-                            if (p.getHost().equals(ip) && p.getPeerId() != peerId) {
-                                connection = new Connection(receivedSocket, this, p, peerId);
-                                this.connectionHashMap.put(p.getPeerId(), connection);
-                                //System.out.println("preferredNeighbors: " + preferredNeighbors.keySet().toString());
+            if (peer.getPeerId() < this.peerId){
+                connect(peer);
+            }
+        }
+        while (true) {
+            try {
+                System.out.println("Wait connecting");
+                Socket receivedSocket = serverSocket.accept();
+                String ip = receivedSocket.getRemoteSocketAddress().toString().split(":")[0].substring(1);
+                System.out.println("Connected to " + ip);
+                Connection connection;
+                for (Peer p : peers.values()) {
+                    if (p.getHost().equals(ip) && p.getPeerId() != peerId) {
+                        connection = new Connection(receivedSocket, this, p, peerId);
+                        this.connectionHashMap.put(p.getPeerId(), connection);
+                        //System.out.println("preferredNeighbors: " + preferredNeighbors.keySet().toString());
                                 /*if (preferredNeighbors.containsKey(p.getPeerId())) {
                                     connection.setPreferN(true);
                                 }*/
-                                connection.start();
-                            }
-                        }
-                    } catch (IOException e) {
-                        //TODO
+                        connection.start();
                     }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            connect(peer);
         }
     }
 
@@ -184,7 +189,7 @@ public class PeerProcess {
             System.out.println(peer.getHost());
             Socket socket = new Socket(peer.getHost(), peer.getPort());
             Connection connection = new Connection(socket, this, peer, this.peerId);
-            Logger.connectTCP(peer.getPeerId());
+            //Logger.connectTCP(peer.getPeerId());
             System.out.println("Connected to " + peer.getPeerId());
             connectionHashMap.put(peer.getPeerId(), connection);
             /*if (preferredNeighbors.containsKey(peer.getPeerId()))
@@ -192,8 +197,6 @@ public class PeerProcess {
             connection.start();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (LoggerIOException e) {
-            //TODO
         }
     }
 
@@ -275,6 +278,13 @@ public class PeerProcess {
     public synchronized void addBitField(BitField bitField, int peerID){
         if (!bitFields.containsKey(peerID)){
             bitFields.put(peerID, bitField);
+            byte[] bytes = bitField.getBitFieldByteArray();
+            for (byte b : bytes){
+                if ((b & 0xFF) != 0xFF){
+                    return;
+                }
+            }
+            peers.get(peerID).setHasCompleteFile(true);
         }
     }
     //Get bit field
@@ -321,11 +331,11 @@ public class PeerProcess {
         if(finish){
             System.out.println("The file complete!");
             FileOutputStream fileOutputStream = new FileOutputStream("out/" + fileName);
-            fileOutputStream.write(file);
+            fileOutputStream.write(file, 0, fileSize);
             fileOutputStream.close();
         }
     }
-    public void sendHave(int index){
+    public synchronized void sendHave(int index){
         for (HashMap.Entry e : connectionHashMap.entrySet()){
             Connection c =(Connection)e.getValue();
             c.broadcastHave(index);

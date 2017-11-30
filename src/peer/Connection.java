@@ -58,12 +58,16 @@ public class Connection extends Thread {
         try {
             this.outputStream = new BufferedOutputStream(this.socket.getOutputStream());
             this.inputStream = new BufferedInputStream(this.socket.getInputStream());
+            outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public synchronized void setPreferN(boolean preferN){
+        if (preferN){
+            unchoke = true;
+        }
         this.preferN = preferN;
     }
 
@@ -87,7 +91,7 @@ public class Connection extends Thread {
             int result = inputStream.read(reply);
             System.out.println("Result : " + result);
             while (result <= 0){
-                System.out.println("waiting to handshake");
+                //System.out.println("waiting to handshake");
                 result = this.inputStream.read(reply);
             }
             Handshake handshake = new Handshake(reply);
@@ -180,11 +184,11 @@ public class Connection extends Thread {
     }
     private boolean sendHave(){
         Message sendMsg = new Message(MessageConstant.HAVE_LENGTH, MessageConstant.HAVE_TYPE,
-                ByteBuffer.allocate(4).putInt(lastReceive.poll()).array());
-        System.out.println("Sent have piece " + lastReceive );
+                ByteBuffer.allocate(4).putInt(lastReceive.peek()).array());
+        System.out.println("Sent have piece " + lastReceive.poll() );
         return send(sendMsg);
     }
-    public void broadcastHave(int received){
+    public synchronized void broadcastHave(int received){
         broadcastHave = true;
         lastReceive.offer(received);
     }
@@ -256,6 +260,9 @@ public class Connection extends Thread {
     }
     public synchronized void setOpPrefer(boolean opPrefer){
         this.opPrefer = opPrefer;
+        if (opPrefer){
+            unchoke = true;
+        }
     }
     public synchronized int getDownloadBytes(){
         return downloadBytes;
@@ -290,7 +297,6 @@ public class Connection extends Thread {
             if (lastReceive.size() != 0){
                 sendHave();
             }
-
             if (unchoke){
                 sendUnchocked();
                 preferN = true;
@@ -398,7 +404,7 @@ public class Connection extends Thread {
                                     (payload[2] & 0xFF) << 8 |
                                     (payload[1] & 0xFF) << 16 |
                                     (payload[0] & 0xFF) << 24;
-                            System.out.print("Receive piece index: " + pieceNum3);
+                            System.out.println("Receive piece index: " + pieceNum3);
                             //Update my bit field
                             process.updateBitField(pieceNum3, myPeerID);
                             process.writeIntoFile(Arrays.copyOfRange(payload, 4, payload.length), pieceNum3);
