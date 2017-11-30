@@ -19,11 +19,11 @@ public class Connection extends Thread {
     private boolean opPrefer;
     private boolean interested;
     private boolean broadcastHave;
-    private int lastReceive;
+    private Queue<Integer> lastReceive;
     //Access peer process
     private PeerProcess process;
     private int downloadBytes;
-    private int downloadSpeed;
+    private boolean isRunning;
     private boolean unchoke;
 
     public Connection(Socket socket, int myPeerID) {
@@ -52,7 +52,8 @@ public class Connection extends Thread {
         this.interested = false;
         this.broadcastHave = false;
         this.downloadBytes = 0;
-        this.downloadSpeed = 0;
+        this.isRunning = true;
+        lastReceive = new LinkedList<>();
         unchoke = false;
         try {
             this.outputStream = new BufferedOutputStream(this.socket.getOutputStream());
@@ -179,12 +180,13 @@ public class Connection extends Thread {
     }
     private boolean sendHave(){
         Message sendMsg = new Message(MessageConstant.HAVE_LENGTH, MessageConstant.HAVE_TYPE,
-                ByteBuffer.allocate(4).putInt(lastReceive).array());
+                ByteBuffer.allocate(4).putInt(lastReceive.poll()).array());
+        System.out.println("Sent have piece " + lastReceive );
         return send(sendMsg);
     }
     public void broadcastHave(int received){
         broadcastHave = true;
-        lastReceive = received;
+        lastReceive.offer(received);
     }
 
     private synchronized boolean isInterested(int peerId) {
@@ -261,6 +263,7 @@ public class Connection extends Thread {
     public synchronized void setUnchoke(boolean b){
         unchoke = b;
     }
+    public synchronized boolean getIsRunning(){return isRunning;}
     @Override
     public void run() {
         //Handshake first
@@ -284,20 +287,16 @@ public class Connection extends Thread {
 
         while (true){
             //Send
-            if (broadcastHave){
+            if (lastReceive.size() != 0){
                 sendHave();
-                broadcastHave = false;
             }
-            if (preferN || opPrefer){
-                //sendPiece();
-                //Send piece
-            }
+
             if (unchoke){
                 sendUnchocked();
                 preferN = true;
                 unchoke = false;
             }
-            if (process.ifAllPeersComplete()){
+            if (process.ifAllPeersComplete() && lastReceive.size() == 0){
                 System.out.println("All peers finish!");
                 break;
             }
@@ -331,8 +330,10 @@ public class Connection extends Thread {
                     }
                     byte[] payload = null;
                     if (length > 0){
-                        System.out.println(length);
+                        System.out.println("Receive length " + length);
                         payload = new byte[length];
+                        //Wait for data
+                        while (inputStream.available() < length);
                         result = inputStream.read(payload);
                         if (result != length){
                             System.out.println("Wrong result");
@@ -363,6 +364,7 @@ public class Connection extends Thread {
                                         (payload[1] & 0xFF) << 16 |
                                         (payload[0] & 0xFF) << 24;
                             //}
+                            System.out.println("Receive have piece " + pieceNum1);
                             process.updateBitField(pieceNum1, peer.getPeerId());
                             if (isInterested(peer.getPeerId())) {
                                 sendInterested();
@@ -409,6 +411,7 @@ public class Connection extends Thread {
                             downloadBytes += length;
                             //Send piece to file
                             process.writeIntoFile(Arrays.copyOfRange(payload, 5, payload.length), pieceNum3);
+                            process.sendHave(pieceNum3);
                             break;
                         default:
                             System.out.println("Unexpected message");
@@ -427,6 +430,7 @@ public class Connection extends Thread {
         }
         try{
             System.out.println("close stream");
+            isRunning = false;
             outputStream.close();
             inputStream.close();
         }catch (Exception e){

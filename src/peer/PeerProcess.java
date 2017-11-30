@@ -39,6 +39,7 @@ public class PeerProcess {
     private Timer timer;
     private TimerTask updatePreferredNeighbors;
     private TimerTask updateOptimisticNeighbor;
+    private TimerTask checkALlFinished;
 
     public PeerProcess(int peerId) {
 
@@ -143,9 +144,11 @@ public class PeerProcess {
         this.connectionHashMap = new HashMap<>();
         updatePreferredNeighbors = new UpdatePreferredNeighbors();
         updateOptimisticNeighbor = new UpdateOptimisticNeighbor();
+        checkALlFinished = new CheckAllThreadRunning();
         System.out.println(unchokingInterval);
         timer.schedule(updatePreferredNeighbors, 6000, this.unchokingInterval);
         timer.schedule(updateOptimisticNeighbor, 6000, this.optimisticUnchokingInterval);
+        timer.schedule(checkALlFinished, 20000, 100);
         for (Peer peer : peers.values()) {
             if (peer.getPeerId() == this.peerId){
                 while (true) {
@@ -253,6 +256,19 @@ public class PeerProcess {
             Random rand = new Random();
             int randIndex = rand.nextInt(connections.size());
             connections.get(randIndex).setOpPrefer(true);
+        }
+    }
+    private class CheckAllThreadRunning extends TimerTask{
+        @Override
+        public void run(){
+            for (Map.Entry e : connectionHashMap.entrySet()){
+                Connection connection = (Connection) e.getValue();
+                if (connection.getIsRunning()){
+                    return;
+                }
+            }
+            System.out.println("All finished!");
+            System.exit(0);
         }
     }
     //Put bit field.
@@ -403,10 +419,10 @@ public class PeerProcess {
     }
 
     public static void main(String[] args) {
-        int peerId = Integer.parseInt(args[0]);
+        //int peerId = Integer.parseInt(args[0]);
 
         //analyse config file
-        PeerProcess peerProcess = new PeerProcess(peerId);
+        PeerProcess peerProcess = new PeerProcess(1002);
         peerProcess.run();
     }
 
