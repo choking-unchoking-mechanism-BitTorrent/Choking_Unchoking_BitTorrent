@@ -166,6 +166,11 @@ public class PeerProcess {
                 Socket receivedSocket = serverSocket.accept();
                 String ip = receivedSocket.getRemoteSocketAddress().toString().split(":")[0].substring(1);
                 System.out.println("Connected to " + ip);
+                try {
+                    Logger.connectedTCP(peerId);
+                } catch (LoggerIOException e) {
+                    e.printStackTrace();
+                }
                 Connection connection;
                 for (Peer p : peers.values()) {
                     if (p.getHost().equals(ip) && p.getPeerId() != peerId) {
@@ -189,7 +194,11 @@ public class PeerProcess {
             System.out.println(peer.getHost());
             Socket socket = new Socket(peer.getHost(), peer.getPort());
             Connection connection = new Connection(socket, this, peer, this.peerId);
-            //Logger.connectTCP(peer.getPeerId());
+            try {
+                Logger.connectTCP(peer.getPeerId());
+            } catch (LoggerIOException e) {
+                e.printStackTrace();
+            }
             System.out.println("Connected to " + peer.getPeerId());
             connectionHashMap.put(peer.getPeerId(), connection);
             /*if (preferredNeighbors.containsKey(peer.getPeerId()))
@@ -226,12 +235,21 @@ public class PeerProcess {
                 if (max == -1 || id == -1){
                     return;
                 }
-                if (!connectionHashMap.get(id).getPreferN()){
-                    connectionHashMap.get(id).setUnchoke(true);
+                if (!connectionHashMap.get(id).getPreferN() && connectionHashMap.get(id).getIsRunning()){
+                    connectionHashMap.get(id).setPreferN(true);
                 }
                 preferredNeighbors.put(id, peers.get(id));
                 map.remove(id);
                 //connectionHashMap.get(id).setSendRequest(true);
+            }
+            ArrayList<String> preferedNeighborList = new ArrayList<>();
+            for(Integer i : preferredNeighbors.keySet()){
+                preferedNeighborList.add(String.valueOf(i));
+            }
+            try {
+                Logger.changePreferedNeighbors(preferedNeighborList);
+            } catch (LoggerIOException e) {
+                e.printStackTrace();
             }
             for (Map.Entry e : map.entrySet()){
                 connectionHashMap.get(e.getKey()).setPreferN(false);
@@ -245,11 +263,11 @@ public class PeerProcess {
         public void run() {
             List<Connection> connections = new ArrayList<>();
             for (Map.Entry e : interestPeer.entrySet()){
+                connectionHashMap.get((Integer)e.getKey()).setOpPrefer(false);
                 if (!connectionHashMap.get((Integer)e.getKey()).getPreferN()){
-                    if (connectionHashMap.get((Integer)e.getKey()).getOpPrefer()){
-                        connectionHashMap.get((Integer)e.getKey()).setOpPrefer(false);
+                    if (!connectionHashMap.get((Integer)e.getKey()).getOpPrefer()){
+                        connections.add(connectionHashMap.get((Integer)e.getKey()));
                     }
-                    connections.add(connectionHashMap.get((Integer)e.getKey()));
                 }
             }
             //Get random index.
@@ -259,16 +277,25 @@ public class PeerProcess {
             Random rand = new Random();
             int randIndex = rand.nextInt(connections.size());
             connections.get(randIndex).setOpPrefer(true);
+            try {
+                Logger.changeOptimisticallyUnchokedNeighbor(connections.get(randIndex).getPeer().getPeerId());
+            } catch (LoggerIOException e) {
+                e.printStackTrace();
+            }
         }
     }
     private class CheckAllThreadRunning extends TimerTask{
         @Override
         public void run(){
-            for (Map.Entry e : connectionHashMap.entrySet()){
-                Connection connection = (Connection) e.getValue();
-                if (connection.getIsRunning()){
+            for (Peer peer : peers.values()){
+                if (!peer.getHasCompleteFile()){
                     return;
                 }
+            }
+            try {
+                Logger.closeLogger();
+            } catch (LoggerIOException e) {
+                e.printStackTrace();
             }
             System.out.println("All finished!");
             System.exit(0);
@@ -301,6 +328,7 @@ public class PeerProcess {
             FileInputStream fs = new FileInputStream(f);
             int result = fs.read(file);
             System.out.println("Bytes of file : " + result);
+            fs.close();
         }catch (Exception e){
             e.printStackTrace();
             return false;
@@ -329,6 +357,11 @@ public class PeerProcess {
             }
         }
         if(finish){
+            try {
+                Logger.completeDownload();
+            } catch (LoggerIOException e) {
+                e.printStackTrace();
+            }
             System.out.println("The file complete!");
             FileOutputStream fileOutputStream = new FileOutputStream("out/" + fileName);
             fileOutputStream.write(file, 0, fileSize);
@@ -429,10 +462,10 @@ public class PeerProcess {
     }
 
     public static void main(String[] args) {
-        //int peerId = Integer.parseInt(args[0]);
+        int peerId = Integer.parseInt(args[0]);
 
         //analyse config file
-        PeerProcess peerProcess = new PeerProcess(1002);
+        PeerProcess peerProcess = new PeerProcess(peerId);
         peerProcess.run();
     }
 

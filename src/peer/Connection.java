@@ -1,5 +1,6 @@
 package peer;
 
+import exception.logger.LoggerIOException;
 import exception.message.MessageException;
 import logger.Logger;
 import message.*;
@@ -71,17 +72,17 @@ public class Connection extends Thread {
         this.preferN = preferN;
     }
 
-    private boolean send(Message message) {
+    private synchronized boolean send(Message message) {
         try{
             this.outputStream.write(message.getMessageByteArray());
             this.outputStream.flush();
         }catch(IOException e){
-            //TODO
+            e.printStackTrace();
             return false;
         }
         return true;
     }
-    private boolean handshake(){
+    private synchronized boolean handshake(){
         try{
             //Send handshake
             this.outputStream.write(new Handshake(myPeerID).getHandshake());
@@ -105,7 +106,7 @@ public class Connection extends Thread {
         }
         return true;
     }
-    private boolean sendBitfield(){
+    private synchronized boolean sendBitfield(){
         try{
             BitField field = process.getBitField(this.myPeerID);
             outputStream.write(field.getBitFieldByteArray());
@@ -132,10 +133,14 @@ public class Connection extends Thread {
         return true;
     }
 
-    private boolean sendRequest(){
+    private synchronized boolean sendRequest(){
         //if(process.getInterestPeer().containsKey(peer.getPeerId())){
+        byte[] randomIndex = getRandomPieceIndex();
+        if (randomIndex == null){
+            return true;
+        }
         Message requestMessage = new Message(MessageConstant.REQUEST_LENGTH, MessageConstant.REQUEST_TYPE,
-                getRandomPieceIndex());
+                randomIndex);
         System.out.println("send request to Peer: " + peer.getPeerId());
         return send(requestMessage);
         //} else {
@@ -143,7 +148,7 @@ public class Connection extends Thread {
         //}
     }
 
-    private boolean sendPiece(int pieceID){
+    private synchronized boolean sendPiece(int pieceID){
         byte[] pieceContent = process.getFilePart(pieceID);
         byte[] pieceNum = ByteBuffer.allocate(4).putInt(pieceID).array();
         byte[] content = new byte[pieceContent.length + pieceNum.length];
@@ -160,32 +165,42 @@ public class Connection extends Thread {
         return send(pieceMessage);
     }
 
-    private boolean sendInterested(){
+    private synchronized boolean sendInterested(){
         Message interestedMsg = new Message(MessageConstant.INTERESTED_LENGTH, MessageConstant.INTERESTED_TYPE, null);
         System.out.println("Sent Interested!");
         return send(interestedMsg);
     }
 
-    private boolean sendNotInterested(){
+    private synchronized boolean sendNotInterested(){
         Message notInterestedMsg = new Message(MessageConstant.NOT_INTERESTED_LENGTH, MessageConstant.NOT_INTERESTED_TYPE, null);
         System.out.println("Sent Not Interested!");
         return send(notInterestedMsg);
     }
 
-    private boolean sendChocked() {
+    private synchronized boolean sendChocked() {
         Message chockedMsg = new Message(MessageConstant.CHOKE_LENGTH, MessageConstant.CHOKE_TYPE, null);
+        try {
+            Logger.choke(peer.getPeerId());
+        } catch (LoggerIOException e) {
+            e.printStackTrace();
+        }
         return send(chockedMsg);
     }
 
-    private boolean sendUnchocked(){
+    private synchronized boolean sendUnchocked(){
         Message unchockedMsg = new Message(MessageConstant.UNCHOKE_LENGTH, MessageConstant.UNCHOKE_TYPE, null);
         System.out.println("Unchocked peer " + peer.getPeerId());
+        try {
+            Logger.unchoke(peer.getPeerId());
+        } catch (LoggerIOException e) {
+            e.printStackTrace();
+        }
         return send(unchockedMsg);
     }
-    private boolean sendHave(){
+    private synchronized boolean sendHave(){
         Message sendMsg = new Message(MessageConstant.HAVE_LENGTH, MessageConstant.HAVE_TYPE,
                 ByteBuffer.allocate(4).putInt(lastReceive.peek()).array());
-        System.out.println("Sent have piece " + lastReceive.poll() );
+        System.out.println("Sent have piece " + lastReceive.poll() + " sent to " + peer.getPeerId());
         return send(sendMsg);
     }
     public synchronized void broadcastHave(int received){
@@ -210,10 +225,14 @@ public class Connection extends Thread {
                     isInterested = true;
                     //Not exist.
                     if (process.getInterestedPieces().indexOf((i-5) * 8 + 7 - j) == -1){
-                        process.getInterestedPieces().add((i-5) * 8 + 7 - j);
+                        synchronized (this){
+                            process.getInterestedPieces().add((i-5) * 8 + 7 - j);
+                        }
                     }
                 } else if(process.getNotInterestedPieces().contains(new Integer((i-5) * 8 + 7 - j))) {
-                    process.getNotInterestedPieces().remove(new Integer((i-5) * 8 + 7 - j));
+                    synchronized (this){
+                        process.getNotInterestedPieces().remove(new Integer((i-5) * 8 + 7 - j));
+                    }
                 }
             }
         }
@@ -238,15 +257,25 @@ public class Connection extends Thread {
     //Get a random number of piece from peerId have but me don't have
     private synchronized byte[] getRandomPieceIndex(){
         HashSet<Integer> set = process.getRequestingPeices();
+        if (set.size() == process.getInterestedPieces().size()){
+            return null;
+        }
         int requestedPieceIndex;
         do {
             //System.out.println(this.process.getInterestedPieces().size());
             requestedPieceIndex = this.process.getInterestedPieces().get(new Random().
                     nextInt(this.process.getInterestedPieces().size()));
+            System.out.println(requestedPieceIndex);
         } while (set.contains(requestedPieceIndex));
         System.out.println("Request peice index " + requestedPieceIndex);
-        set.add(requestedPieceIndex);
+        synchronized (this){
+            set.add(requestedPieceIndex);
+        }
         return ByteBuffer.allocate(4).putInt(requestedPieceIndex).array();
+    }
+
+    public Peer getPeer() {
+        return peer;
     }
 
     public synchronized void doneCalculating(){
@@ -279,13 +308,7 @@ public class Connection extends Thread {
             return;
         }
         System.out.println("handshake successfully");
-        try{
-            Logger.initLogger(myPeerID);
-            Logger.connectedTCP(myPeerID);
-            Logger.closeLogger();
-        }catch (Exception e){
 
-        }
         //Send Bitfield
         if (!sendBitfield()){
             return;
@@ -299,13 +322,12 @@ public class Connection extends Thread {
             }
             if (unchoke){
                 sendUnchocked();
-                preferN = true;
                 unchoke = false;
             }
-            if (process.ifAllPeersComplete() && lastReceive.size() == 0){
-                System.out.println("All peers finish!");
-                break;
-            }
+//            if (process.ifAllPeersComplete() && lastReceive.size() == 0){
+//                System.out.println("All peers finish!");
+//                break;
+//            }
             //receive
             //read length first.
             byte[] reply = new byte[4];
@@ -370,6 +392,11 @@ public class Connection extends Thread {
                                         (payload[1] & 0xFF) << 16 |
                                         (payload[0] & 0xFF) << 24;
                             //}
+                            try {
+                                Logger.receiveHave(peer.getPeerId(), pieceNum1);
+                            } catch (LoggerIOException e) {
+                                e.printStackTrace();
+                            }
                             System.out.println("Receive have piece " + pieceNum1);
                             process.updateBitField(pieceNum1, peer.getPeerId());
                             if (isInterested(peer.getPeerId())) {
@@ -391,10 +418,20 @@ public class Connection extends Thread {
                             sendPiece(pieceNum2);
                             break;
                         case MessageConstant.INTERESTED_TYPE:
+                            try {
+                                Logger.receiveInterested(peer.getPeerId());
+                            } catch (LoggerIOException e) {
+                                e.printStackTrace();
+                            }
                             System.out.println("Receive Interested from peer " + peer.getPeerId());
                             process.updateInterestPeer(peer.getPeerId(), true);
                             break;
                         case MessageConstant.NOT_INTERESTED_TYPE:
+                            try {
+                                Logger.receiveNotInterested(peer.getPeerId());
+                            } catch (LoggerIOException e) {
+                                e.printStackTrace();
+                            }
                             System.out.println("Receive Not Interested from peer " + peer.getPeerId());
                             process.updateInterestPeer(peer.getPeerId(), false);
                             break;
@@ -404,10 +441,14 @@ public class Connection extends Thread {
                                     (payload[2] & 0xFF) << 8 |
                                     (payload[1] & 0xFF) << 16 |
                                     (payload[0] & 0xFF) << 24;
+                            try {
+                                Logger.downloadPiece(peer.getPeerId(), pieceNum3);
+                            } catch (LoggerIOException e) {
+                                e.printStackTrace();
+                            }
                             System.out.println("Receive piece index: " + pieceNum3);
                             //Update my bit field
                             process.updateBitField(pieceNum3, myPeerID);
-                            process.writeIntoFile(Arrays.copyOfRange(payload, 4, payload.length), pieceNum3);
                             if (isInterested(peer.getPeerId())) {
                                 //after receive a piece, continue to send request
                                 sendRequest();
@@ -416,14 +457,14 @@ public class Connection extends Thread {
                             }
                             downloadBytes += length;
                             //Send piece to file
-                            process.writeIntoFile(Arrays.copyOfRange(payload, 5, payload.length), pieceNum3);
+                            process.writeIntoFile(Arrays.copyOfRange(payload, 4, payload.length), pieceNum3);
                             process.sendHave(pieceNum3);
                             break;
                         default:
                             System.out.println("Unexpected message");
                             break;
                     }
-                    if (inputStream.available() > 0)
+                    if (inputStream.available() >= 4)
                         result = inputStream.read(reply);
                     else
                         break;
@@ -434,14 +475,14 @@ public class Connection extends Thread {
                 e.printStackTrace();
             }
         }
-        try{
-            System.out.println("close stream");
-            isRunning = false;
-            outputStream.close();
-            inputStream.close();
-        }catch (Exception e){
-            e.printStackTrace();
-            return;
-        }
+//        try{
+//            System.out.println("close stream");
+//            isRunning = false;
+//            outputStream.close();
+//            inputStream.close();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            return;
+//        }
     }
 }

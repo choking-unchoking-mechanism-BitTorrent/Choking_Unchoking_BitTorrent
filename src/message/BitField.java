@@ -28,7 +28,7 @@ public class BitField {
         }
         return new String(hexChars);
     }
-    public void setBitField(byte[] content){
+    public synchronized void setBitField(byte[] content){
         int num = 0;
         for (int i = 0; i < 4; i++){
             messageLength[i] = content[i];
@@ -42,7 +42,6 @@ public class BitField {
         bitField = new byte[num + 5];
         bitField = content;
         payload = new byte[num];
-        bitField = content;
         System.out.println("debug: " + bytesToHex(bitField));
 
         for (int i = 0; i < num; i++){
@@ -54,9 +53,6 @@ public class BitField {
         totalPieces = piecesNum;
         int payloadLength = (int)Math.ceil((double)totalPieces/8);
         int remaining = totalPieces % 8;
-        if (totalPieces <= 8){
-            remaining = 8 - totalPieces;
-        }
         messageLength = ByteBuffer.allocate(4).putInt(payloadLength).array();
         payload = new byte[payloadLength];
         bitField = new byte[payloadLength + 5];
@@ -76,7 +72,7 @@ public class BitField {
                 return;
             }
             byte lastByte = 0;
-            for (int j = 0; j < remaining; j++){
+            for (int j = 0; j < 8 - remaining; j++){
                 lastByte += ((1&0xFF) << (j));
             }
             bitField[++i] = lastByte;
@@ -102,11 +98,11 @@ public class BitField {
         return payload;
     }
     public void updateBitField(int pieceIndex){
-        int i = (pieceIndex - 1) / 8;
+        int i = (pieceIndex) / 8;
         System.out.println("The bitfield before updated is: " + Arrays.toString(getBooleanArray(bitField[i + 5])));
 
         int m = 7 - ((pieceIndex) % 8);
-        bitField[i + 5] = (byte) (bitField[i + 5] | (1 << m));
+        bitField[i + 5] = (byte) (bitField[i + 5] | ((1 & 0xFF) << m));
         System.out.println("The updated bitfield is: " + Arrays.toString(getBooleanArray(bitField[i + 5])));
 
     }
